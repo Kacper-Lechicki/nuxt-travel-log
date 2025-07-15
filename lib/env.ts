@@ -4,6 +4,12 @@ const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test'], {
     error: () => ({ message: 'zod => The value must be one of: development, production, test.' }),
   }),
+  TURSO_DATABASE_URL: z.url({
+    error: () => ({ message: 'zod => The value must be a valid url.' }),
+  }),
+  TURSO_AUTH_TOKEN: z.string({
+    error: () => ({ message: 'zod => The value must be a valid token.' }),
+  }),
 });
 
 function tryProcessEnv() {

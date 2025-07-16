@@ -10,6 +10,12 @@ const EnvSchema = z.object({
   TURSO_AUTH_TOKEN: z.string({
     error: () => ({ message: 'zod => The value must be a valid token.' }),
   }),
+  BETTER_AUTH_SECRET: z.string({
+    error: () => ({ message: 'zod => The value must be a valid token.' }),
+  }),
+  BETTER_AUTH_URL: z.string({
+    error: () => ({ message: 'zod => The value must be a valid url.' }),
+  }),
 });
 
 function tryProcessEnv() {

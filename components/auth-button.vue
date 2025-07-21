@@ -9,7 +9,6 @@ const { loading, signIn } = useAuthStore();
     @click="signIn"
   >
     <span>Sign In With Github</span>
-
     <span v-if="loading" class="loading loading-spinner loading-md" />
 
     <Icon

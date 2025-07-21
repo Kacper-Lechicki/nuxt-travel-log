@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-const { loading, signIn } = useAuthStore();
+const authStore = useAuthStore();
 </script>
 
 <template>
   <button
-    :disabled="loading"
+    :disabled="authStore.loading"
     class="btn btn-accent"
-    @click="signIn"
+    @click="authStore.signIn"
   >
     <span>Sign In With Github</span>
 
-    <span v-if="loading" class="loading loading-spinner loading-md" />
+    <span v-if="authStore.loading" class="loading loading-spinner loading-md" />
 
     <Icon
       v-else

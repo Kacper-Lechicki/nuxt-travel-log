@@ -22,7 +22,17 @@ function toggleSidebar() {
         class="rounded mb-4 hover:cursor-pointer hover:bg-base-content/5 w-[28px] h-[28px]"
         @click="toggleSidebar"
       >
-        <Icon :name="isSidebarOpen ? 'tabler:chevron-left' : 'tabler:chevron-right'" size="28" />
+        <Icon
+          v-if="isSidebarOpen"
+          name="tabler:chevron-left"
+          size="28"
+        />
+
+        <Icon
+          v-else
+          name="tabler:chevron-right"
+          size="28"
+        />
       </div>
 
       <div class="flex flex-col gap-2">

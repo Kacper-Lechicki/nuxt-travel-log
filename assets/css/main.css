@@ -5,3 +5,8 @@
     light --default,
     dark --prefersdark;
 }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.03rem;
+}

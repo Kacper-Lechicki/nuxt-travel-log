@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
+    '@nuxt/fonts',
   ],
 
   css: ['~/assets/css/main.css'],
@@ -30,5 +31,11 @@ export default defineNuxtConfig({
 
   colorMode: {
     dataValue: 'theme',
+  },
+
+  fonts: {
+    families: [
+      { name: 'Montserrat', provider: 'google' },
+    ],
   },
 });

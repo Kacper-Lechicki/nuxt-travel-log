@@ -13,7 +13,7 @@ const error = route.query.error || 'An unknown error occured.';
 
     <NuxtLink class="btn btn-primary" to="/">
       <span>Home</span>
-      <Icon name="tabler:arrow-left" size="24" />
+      <Icon name="tabler:arrow-left" size="21" />
     </NuxtLink>
   </div>
 </template>

@@ -34,7 +34,10 @@ const authStore = useAuthStore();
     class="btn btn-accent flex gap-2 max-w-50"
     @click="authStore.signIn"
   >
-    <span class="truncate min-w-0">Sign In With Github</span>
+    <span class="truncate min-w-0">
+      Sign In<span class="hidden md:inline"> With Github</span>
+    </span>
+
     <span v-if="authStore.loading" class="loading loading-spinner loading-md flex-shrink-0" />
 
     <Icon

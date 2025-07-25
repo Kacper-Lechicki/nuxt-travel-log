@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { FetchError } from 'ofetch';
-
 import { useForm } from 'vee-validate';
 
 import { InsertLocation } from '~/lib/db/schema';
@@ -10,11 +8,13 @@ const { handleSubmit, errors, meta, setErrors } = useForm({
 });
 
 const router = useRouter();
-const { $csrfFetch } = useNuxtApp();
+const locationsStore = useLocationsStore();
 
-const submitError = ref('');
-const loading = ref(false);
 const submitted = ref(false);
+
+onMounted(() => {
+  locationsStore.clearError();
+});
 
 onBeforeRouteLeave(() => {
   if (!submitted.value && meta.value.dirty) {
@@ -24,62 +24,48 @@ onBeforeRouteLeave(() => {
 });
 
 const onSubmit = handleSubmit(async (values) => {
-  try {
-    submitError.value = '';
-    loading.value = true;
+  locationsStore.clearError();
 
-    await $csrfFetch('/api/locations', {
-      method: 'post',
-      body: values,
-    });
+  const result = await locationsStore.addLocation(values);
 
+  if (result.success) {
     submitted.value = true;
-
     navigateTo('/dashboard');
   }
-  catch (e) {
-    const error = e as FetchError;
-    setErrors(error.data);
-    submitError.value = error.data?.statusMessage || 'An unknown error has occurred.';
-  }
-  finally {
-    loading.value = false;
+  else if (result.validationErrors) {
+    setErrors(result.validationErrors);
   }
 });
 </script>
 
 <template>
   <div class="container max-w-3xl mx-auto flex flex-col gap-8">
-    <div class="flex flex-col gap-3">
-      <h1 class="text-3xl font-medium">
-        Add Location
-      </h1>
-
-      <p class="text-sm font-light">
-        A location is a place you have traveled or will travel to. It can be a city, country, state or point of interest.
+    <UiTitleWithDescription has-description title="Add Location">
+      <template #description>
+        <span>A location is a place you have traveled or will travel to. It can be a city, country, state or point of interest.</span>
         <br>
-        You can add specific times you visited this location after adding it.
-      </p>
-    </div>
+        <span>You can add specific times you visited this location after adding it.</span>
+      </template>
+    </UiTitleWithDescription>
 
     <div
-      v-if="submitError"
+      v-if="locationsStore.hasError"
       class="alert alert-error"
       role="alert"
     >
-      <span>{{ submitError }}</span>
+      <span>{{ locationsStore.error }}</span>
     </div>
 
     <form class="flex flex-col gap-3" @submit.prevent="onSubmit">
       <FormField
-        :disabled="loading"
+        :disabled="locationsStore.isLoading"
         :error="errors.name"
         label="Name"
         name="name"
       />
 
       <FormField
-        :disabled="loading"
+        :disabled="locationsStore.isLoading"
         :error="errors.description"
         :height="140"
         label="Description"
@@ -89,7 +75,7 @@ const onSubmit = handleSubmit(async (values) => {
       />
 
       <FormField
-        :disabled="loading"
+        :disabled="locationsStore.isLoading"
         :error="errors.lat"
         label="Latitude"
         name="lat"
@@ -97,7 +83,7 @@ const onSubmit = handleSubmit(async (values) => {
       />
 
       <FormField
-        :disabled="loading"
+        :disabled="locationsStore.isLoading"
         :error="errors.long"
         label="Longitude"
         name="long"
@@ -106,7 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
 
       <div class="mt-3 flex justify-end gap-3">
         <button
-          :disabled="loading"
+          :disabled="locationsStore.isLoading"
           class="btn btn-outline btn-error"
           type="button"
           @click="router.back()"
@@ -116,12 +102,12 @@ const onSubmit = handleSubmit(async (values) => {
         </button>
 
         <button
-          :disabled="loading"
+          :disabled="locationsStore.isLoading"
           class="btn btn-primary"
           type="submit"
         >
           <span>Add</span>
-          <span v-if="loading" class="loading loading-spinner loading-sm flex-shrink-0" />
+          <span v-if="locationsStore.isLoading" class="loading loading-spinner loading-sm flex-shrink-0" />
 
           <Icon
             v-else

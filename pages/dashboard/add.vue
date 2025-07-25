@@ -71,14 +71,14 @@ const onSubmit = handleSubmit(async (values) => {
     </div>
 
     <form class="flex flex-col gap-3" @submit.prevent="onSubmit">
-      <AppFormField
+      <FormField
         :disabled="loading"
         :error="errors.name"
         label="Name"
         name="name"
       />
 
-      <AppFormField
+      <FormField
         :disabled="loading"
         :error="errors.description"
         :height="140"
@@ -88,7 +88,7 @@ const onSubmit = handleSubmit(async (values) => {
         type="textarea"
       />
 
-      <AppFormField
+      <FormField
         :disabled="loading"
         :error="errors.lat"
         label="Latitude"
@@ -96,7 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
         type="number"
       />
 
-      <AppFormField
+      <FormField
         :disabled="loading"
         :error="errors.long"
         label="Longitude"
@@ -121,7 +121,6 @@ const onSubmit = handleSubmit(async (values) => {
           type="submit"
         >
           <span>Add</span>
-
           <span v-if="loading" class="loading loading-spinner loading-sm flex-shrink-0" />
 
           <Icon

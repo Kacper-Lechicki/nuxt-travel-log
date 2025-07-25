@@ -5,8 +5,9 @@ import AuthButton from '~/components/auth-button.vue';
 <template>
   <div class=" sticky top-0 left-0 navbar bg-primary text-primary-content z-[1000]">
     <div class="navbar-start">
-      <NuxtLink class="btn btn-ghost text-xl" to="/">
-        Travel Log
+      <NuxtLink class="flex items-center gap-3 btn btn-ghost text-xl" to="/">
+        <Icon name="tabler:map" size="21" />
+        <span>Travel Log</span>
       </NuxtLink>
     </div>
 

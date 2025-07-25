@@ -11,9 +11,8 @@ const route = useRoute();
 
 <template>
   <div
-    :class="{ 'lg:tooltip': $props.onlyIcon }"
-    :data-tip="onlyIcon ? $props.label : undefined"
-    class="lg:tooltip-right"
+    :class="{ 'lg:tooltip lg:tooltip-right': $props.onlyIcon }"
+    :data-tip="$props.onlyIcon ? $props.label : undefined"
   >
     <NuxtLink
       :class="{ 'bg-base-100 border-gray-700/100': route.path === $props.href, 'justify-center': $props.onlyIcon }"

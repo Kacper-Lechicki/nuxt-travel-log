@@ -13,6 +13,8 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
     '@nuxt/fonts',
+    '@vee-validate/nuxt',
+    'nuxt-csurf',
   ],
 
   css: ['~/assets/css/main.css'],
@@ -35,7 +37,11 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: 'Montserrat', provider: 'google' },
+      {
+        name: 'Montserrat',
+        provider: 'google',
+        weights: [100, 200, 300, 400, 500, 600, 700, 800],
+      },
     ],
   },
 });

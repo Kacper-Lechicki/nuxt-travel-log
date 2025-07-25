@@ -1,19 +1,22 @@
 import { defineStore } from 'pinia';
 
-export const useSidebarStore = defineStore('sidebarStore', () => {
-  const isSidebarOpen = ref(true);
+type SidebarState = {
+  isSidebarOpen: boolean;
+};
 
-  onMounted(() => {
-    isSidebarOpen.value = localStorage.getItem('isSidebarOpen') === 'true';
-  });
+export const useSidebarStore = defineStore('sidebarStore', {
+  state: (): SidebarState => ({
+    isSidebarOpen: true,
+  }),
 
-  function toggleSidebar() {
-    isSidebarOpen.value = !isSidebarOpen.value;
-    localStorage.setItem('isSidebarOpen', isSidebarOpen.value.toString());
-  }
+  actions: {
+    setSidebarValueFromLocalStorage() {
+      this.isSidebarOpen = localStorage.getItem('isSidebarOpen') === 'true';
+    },
 
-  return {
-    isSidebarOpen,
-    toggleSidebar,
-  };
+    toggleSidebar() {
+      this.isSidebarOpen = !this.isSidebarOpen;
+      localStorage.setItem('isSidebarOpen', this.isSidebarOpen.toString());
+    },
+  },
 });

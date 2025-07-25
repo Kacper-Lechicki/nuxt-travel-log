@@ -3,52 +3,54 @@ import { defineStore } from 'pinia';
 
 const authClient = createAuthClient();
 
-export const useAuthStore = defineStore('authStore', () => {
-  const session = ref<Awaited<ReturnType<typeof authClient.useSession>> | null>(null);
+type AuthState = {
+  session: any;
+};
 
-  async function init() {
-    session.value = await authClient.useSession(useFetch);
-  }
+export const useAuthStore = defineStore('authStore', {
+  state: (): AuthState => ({
+    session: null,
+  }),
 
-  const user = computed(() => session.value?.data?.user);
-  const loading = computed(() => session.value?.isPending);
+  getters: {
+    user: state => state.session?.data?.user,
+    loading: state => state.session?.isPending,
+  },
 
-  async function signIn() {
-    const { csrf } = useCsrf();
-    const headers = new Headers();
+  actions: {
+    async init() {
+      this.session = await authClient.useSession(useFetch);
+    },
 
-    headers.append('csrf-token', csrf);
+    async signIn() {
+      const { csrf } = useCsrf();
+      const headers = new Headers();
 
-    await authClient.signIn.social({
-      provider: 'github',
-      callbackURL: '/dashboard',
-      errorCallbackURL: '/error',
-      fetchOptions: {
-        headers,
-      },
-    });
-  }
+      headers.append('csrf-token', csrf);
 
-  async function signOut() {
-    const { csrf } = useCsrf();
-    const headers = new Headers();
+      await authClient.signIn.social({
+        provider: 'github',
+        callbackURL: '/dashboard',
+        errorCallbackURL: '/error',
+        fetchOptions: {
+          headers,
+        },
+      });
+    },
 
-    headers.append('csrf-token', csrf);
+    async signOut() {
+      const { csrf } = useCsrf();
+      const headers = new Headers();
 
-    await authClient.signOut({
-      fetchOptions: {
-        headers,
-      },
-    });
+      headers.append('csrf-token', csrf);
 
-    navigateTo('/');
-  }
+      await authClient.signOut({
+        fetchOptions: {
+          headers,
+        },
+      });
 
-  return {
-    init,
-    loading,
-    user,
-    signIn,
-    signOut,
-  };
+      navigateTo('/');
+    },
+  },
 });

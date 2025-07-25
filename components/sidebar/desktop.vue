@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 const sidebarStore = useSidebarStore();
+
+onMounted(() => {
+  sidebarStore.setSidebarValueFromLocalStorage();
+});
 </script>
 
 <template>
   <aside
     :class="{ 'lg:w-80': sidebarStore.isSidebarOpen, 'lg:w-17': !sidebarStore.isSidebarOpen }"
-    class="hidden lg:flex flex-col bg-base-300 transition-all duration-300 sticky top-[56px] h-[calc(100vh-56px)]"
+    class="hidden lg:flex flex-col bg-base-300 transition-all duration-300 sticky top-[56px] h-[calc(100vh-56px)] z-[100]"
   >
     <div class="px-3 py-6 flex-shrink-0">
       <div

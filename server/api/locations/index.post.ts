@@ -4,10 +4,9 @@ import slugify from 'slug';
 
 import { findExistingLocation, findUniqueSlug, insertLocation } from '~/lib/db/queries/location';
 import { InsertLocation } from '~/lib/db/schema';
-import { requireAuth } from '~/server/utils/auth';
+import defineAuthenticatedEventHandler from '~/utils/define-authenticated-event-handler';
 
-export default defineEventHandler(async (event) => {
-  const user = await requireAuth(event);
+export default defineAuthenticatedEventHandler(async (event) => {
   const result = await readValidatedBody(event, InsertLocation.safeParse);
 
   if (!result.success) {
@@ -25,7 +24,7 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const existingLocation = await findExistingLocation(result.data, user.id);
+  const existingLocation = await findExistingLocation(result.data, event.context.user!.id);
 
   if (existingLocation) {
     return sendError(event, createError({
@@ -37,7 +36,7 @@ export default defineEventHandler(async (event) => {
   const slug = await findUniqueSlug(slugify(result.data.name));
 
   try {
-    return await insertLocation(result.data, slug, user.id);
+    return await insertLocation(result.data, slug, event.context.user!.id);
   }
   catch (e) {
     const error = e as DrizzleError;

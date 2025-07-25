@@ -5,7 +5,7 @@
     <div class="navbar-start">
       <NuxtLink class="flex items-center gap-3 btn btn-ghost text-xl" to="/">
         <Icon name="tabler:map" size="21" />
-        <span>Travel Log</span>
+        <h1>Travel Log</h1>
       </NuxtLink>
     </div>
 

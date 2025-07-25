@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 const sidebarStore = useSidebarStore();
+
+onMounted(() => {
+  sidebarStore.setSidebarValueFromLocalStorage();
+});
 </script>
 
 <template>

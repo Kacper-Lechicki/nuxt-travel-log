@@ -5,7 +5,7 @@ const authStore = useAuthStore();
 <template>
   <div v-if="!authStore.loading && authStore.user" class="dropdown dropdown-end">
     <div
-      class="btn flex gap-3 max-w-50"
+      class="btn flex gap-3 max-w-55"
       role="button"
       tabindex="0"
     >
@@ -15,7 +15,7 @@ const authStore = useAuthStore();
         </div>
       </div>
 
-      <span class="truncate min-w-0">{{ authStore.user.name }}</span>
+      <span class="truncate min-w-0 hidden sm:inline">{{ authStore.user.name }}</span>
     </div>
 
     <ul class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-md" tabindex="0">
@@ -31,14 +31,14 @@ const authStore = useAuthStore();
   <button
     v-else
     :disabled="authStore.loading"
-    class="btn btn-accent flex gap-2 max-w-50"
+    class="btn btn-accent flex gap-2 max-w-55"
     @click="authStore.signIn"
   >
     <span class="truncate min-w-0">
       Sign In<span class="hidden md:inline"> With Github</span>
     </span>
 
-    <span v-if="authStore.loading" class="loading loading-spinner loading-md flex-shrink-0" />
+    <span v-if="authStore.loading" class="loading loading-spinner loading-sm flex-shrink-0" />
 
     <Icon
       v-else

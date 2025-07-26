@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const sidebarStore = useSidebarStore();
+const locationsStore = useLocationsStore();
 
 onMounted(() => {
   sidebarStore.setSidebarValueFromLocalStorage();
@@ -22,6 +23,7 @@ onMounted(() => {
           name="tabler:chevron-left"
           size="28"
         />
+
         <Icon
           v-else
           name="tabler:chevron-right"
@@ -30,8 +32,10 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="flex-1 px-3 relative">
-      <div class="flex flex-col gap-4 pb-6">
+    <div
+      class="flex-1 px-3 pb-6 flex flex-col gap-3 overflow-hidden"
+    >
+      <div class="flex flex-col gap-3 flex-shrink-0">
         <SidebarButton
           :only-icon="!sidebarStore.isSidebarOpen"
           href="/dashboard"
@@ -46,7 +50,33 @@ onMounted(() => {
           label="Add Location"
         />
 
-        <div class="divider" />
+        <div class="divider m-0" />
+      </div>
+
+      <div
+        :class="{
+          'scrollbar-hidden': !sidebarStore.isSidebarOpen,
+          'scrollbar-normal': sidebarStore.isSidebarOpen,
+        }"
+        class="flex-1 overflow-y-auto min-h-0"
+      >
+        <div class="flex flex-col gap-3">
+          <div v-if="sidebarStore.isLoading" class="skeleton w-full h-6" />
+
+          <SidebarButton
+            v-for="item in locationsStore.sidebarItems"
+            v-else
+            :key="item.id"
+            :href="item.href"
+            :icon="item.icon"
+            :label="item.label"
+            :only-icon="!sidebarStore.isSidebarOpen"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3 flex-shrink-0">
+        <div class="divider m-0" />
 
         <SidebarButton
           :only-icon="!sidebarStore.isSidebarOpen"
@@ -58,3 +88,14 @@ onMounted(() => {
     </div>
   </aside>
 </template>
+
+<style lang="css" scoped>
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>

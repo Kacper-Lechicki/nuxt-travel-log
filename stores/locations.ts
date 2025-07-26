@@ -1,77 +1,107 @@
 import { defineStore } from 'pinia';
 
-import type { Location } from '~/lib/db/schema';
-
-type Status = 'idle' | 'loading' | 'success' | 'error';
+import type { InsertLocation, Location } from '~/lib/db/schema';
 
 type LocationsState = {
   locations: Location[];
-  status: Status;
+  isLoading: boolean;
   error: string | null;
+  isInitialized: boolean;
 };
 
-export const useLocationsStore = defineStore('locationsStore', {
+export const useLocationsStore = defineStore('locations', {
   state: (): LocationsState => ({
     locations: [],
-    status: 'idle',
+    isLoading: false,
     error: null,
+    isInitialized: false,
   }),
 
   getters: {
-    isLoading: state => state.status === 'loading',
-    hasError: state => state.status === 'error',
-    isSuccess: state => state.status === 'success',
-    isIdle: state => state.status === 'idle',
-    locationsCount: state => state.locations.length,
-    hasCompletedFetch: state => state.status === 'success' || state.status === 'error',
-    shouldShowEmptyState: state => state.status === 'success' && state.locations.length === 0,
+    count: state => state.isInitialized && state.locations.length,
+    isEmpty: state => state.isInitialized && !state.isLoading && !state.locations.length,
+    sidebarItems: state => state.isInitialized && state.locations.map(location => ({
+      id: `location-${location.id}`,
+      label: location.name,
+      icon: 'tabler:map-pin-filled',
+      href: `#`,
+    })),
+    hasLocations: state => state.isInitialized && !state.isLoading && state.locations.length,
   },
 
   actions: {
-    async fetchLocations() {
-      this.status = 'loading';
+    async fetch() {
+      this.isInitialized = true;
+
+      if (this.locations.length > 0)
+        return;
+
+      this.isLoading = true;
       this.error = null;
 
       try {
-        const data = await $fetch('/api/locations');
-
+        const data = await $fetch<Location[]>('/api/locations');
         this.locations = data || [];
-        this.status = 'success';
       }
-      catch (e) {
-        this.error = e instanceof Error ? e.message : 'An unknown error has occurred.';
-        this.status = 'error';
+      catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to fetch locations';
+      }
+      finally {
+        this.isLoading = false;
       }
     },
 
-    async addLocation(location: Location) {
-      this.status = 'loading';
+    async refresh() {
+      this.isLoading = true;
+      this.error = null;
+
+      try {
+        const data = await $fetch<Location[]>('/api/locations');
+        this.locations = data || [];
+      }
+      catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to refresh locations';
+      }
+      finally {
+        this.isLoading = false;
+      }
+    },
+
+    async add(location: InsertLocation) {
+      this.isLoading = true;
       this.error = null;
 
       try {
         const { $csrfFetch } = useNuxtApp();
 
-        const { data } = await $csrfFetch('/api/locations', {
+        const data = await $csrfFetch<Location>('/api/locations', {
           method: 'POST',
           body: location,
         });
 
-        this.locations.push(data);
-        this.status = 'success';
+        await this.refresh();
 
         return { success: true, data };
       }
-      catch (e: any) {
-        this.error = e.data?.statusMessage || 'An unknown error has occurred.';
-        this.status = 'error';
+      catch (error: any) {
+        this.error = error.data?.statusMessage || 'Failed to add location.';
 
-        return { success: false, error: e, validationErrors: e.data };
+        return {
+          success: false,
+          error: this.error,
+          validationErrors: error.data?.validationErrors,
+        };
+      }
+      finally {
+        this.isLoading = false;
       }
     },
 
-    clearError() {
+    clear() {
+      this.locations = [];
       this.error = null;
-      this.status = 'idle';
+      this.isLoading = false;
+      this.isInitialized = false;
     },
   },
 });

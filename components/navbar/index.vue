@@ -1,5 +1,3 @@
-<script lang="ts" setup></script>
-
 <template>
   <header class="sticky top-0 left-0 navbar bg-primary text-primary-content z-[1000]">
     <div class="navbar-start">

@@ -3,7 +3,7 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-  <div v-if="!authStore.loading && authStore.user" class="dropdown dropdown-end">
+  <div v-if="!authStore.isLoading && authStore.user" class="dropdown dropdown-end">
     <div
       class="btn flex gap-3 max-w-55"
       role="button"
@@ -30,7 +30,7 @@ const authStore = useAuthStore();
 
   <button
     v-else
-    :disabled="authStore.loading"
+    :disabled="authStore.isLoading"
     class="btn btn-accent flex gap-2 max-w-55"
     @click="authStore.signIn"
   >
@@ -38,7 +38,7 @@ const authStore = useAuthStore();
       Sign In<span class="hidden md:inline"> With Github</span>
     </span>
 
-    <span v-if="authStore.loading" class="loading loading-spinner loading-sm flex-shrink-0" />
+    <span v-if="authStore.isLoading" class="loading loading-spinner loading-sm flex-shrink-0" />
 
     <Icon
       v-else

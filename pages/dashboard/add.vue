@@ -9,11 +9,10 @@ const { handleSubmit, errors, meta, setErrors } = useForm({
 
 const router = useRouter();
 const locationsStore = useLocationsStore();
-
 const submitted = ref(false);
 
 onMounted(() => {
-  locationsStore.clearError();
+  locationsStore.error = null;
 });
 
 onBeforeRouteLeave(() => {
@@ -24,13 +23,11 @@ onBeforeRouteLeave(() => {
 });
 
 const onSubmit = handleSubmit(async (values) => {
-  locationsStore.clearError();
-
-  const result = await locationsStore.addLocation(values);
+  const result = await locationsStore.add(values);
 
   if (result.success) {
     submitted.value = true;
-    navigateTo('/dashboard');
+    await navigateTo('/dashboard');
   }
   else if (result.validationErrors) {
     setErrors(result.validationErrors);
@@ -49,7 +46,7 @@ const onSubmit = handleSubmit(async (values) => {
     </UiTitleWithDescription>
 
     <div
-      v-if="locationsStore.hasError"
+      v-if="locationsStore.error"
       class="alert alert-error"
       role="alert"
     >
@@ -107,8 +104,10 @@ const onSubmit = handleSubmit(async (values) => {
           type="submit"
         >
           <span>Add</span>
-          <span v-if="locationsStore.isLoading" class="loading loading-spinner loading-sm flex-shrink-0" />
-
+          <span
+            v-if="locationsStore.isLoading"
+            class="loading loading-spinner loading-sm flex-shrink-0"
+          />
           <Icon
             v-else
             name="tabler:circle-plus-filled"

@@ -25,9 +25,9 @@ onMounted(() => {
       @click.stop
     >
       <div
-        class="flex-1 px-3 py-6 overflow-y-auto border-t border-gray-700/30 scrollbar-thin scrollbar-thumb-base-content/20 scrollbar-track-transparent"
+        class="flex-1 px-3 py-6 flex flex-col gap-3 border-t border-gray-700/30 overflow-hidden"
       >
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-3 flex-shrink-0">
           <SidebarButton
             :only-icon="false"
             href="/dashboard"
@@ -44,7 +44,27 @@ onMounted(() => {
             @click="sidebarStore.toggleSidebar"
           />
 
-          <div class="divider" />
+          <div class="divider m-0" />
+        </div>
+
+        <div class="flex-1 overflow-y-auto min-h-0 scrollbar-thin">
+          <div class="flex flex-col gap-3 pr-2">
+            <div v-if="sidebarStore.isLoading" class="skeleton w-full h-6" />
+
+            <SidebarButton
+              v-for="item in sidebarStore.sidebarItems"
+              v-else
+              :key="item.id"
+              :href="item.href"
+              :icon="item.icon"
+              :label="item.label"
+              :only-icon="!sidebarStore.isSidebarOpen"
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 flex-shrink-0">
+          <div class="divider m-0" />
 
           <SidebarButton
             :only-icon="false"

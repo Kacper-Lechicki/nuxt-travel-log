@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('authStore', {
 
   getters: {
     user: state => state.session?.data?.user,
-    loading: state => state.session?.isPending,
+    isLoading: state => state.session?.isPending,
   },
 
   actions: {

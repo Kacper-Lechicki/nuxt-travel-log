@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { Location } from '~/lib/db/schema';
 
-defineProps<{
+const props = defineProps<{
   location: Location;
 }>();
 </script>
@@ -12,18 +12,18 @@ defineProps<{
   >
     <div class="card-body flex flex-col h-full">
       <h3
-        :title="$props.location.name"
+        :title="props.location.name"
         class="text-xl font-bold truncate flex-shrink-0"
       >
-        {{ $props.location.name }}
+        {{ props.location.name }}
       </h3>
 
       <div class="flex-1 overflow-hidden">
         <p
-          :title="$props.location.description"
+          :title="props.location.description"
           class="text-sm leading-relaxed description-text"
         >
-          {{ $props.location.description }}
+          {{ props.location.description }}
         </p>
       </div>
     </div>

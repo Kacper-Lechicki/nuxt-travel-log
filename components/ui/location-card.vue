@@ -21,7 +21,7 @@ defineProps<{
       <div class="flex-1 overflow-hidden">
         <p
           :title="$props.location.description"
-          class="font-light text-base-content/70 text-sm leading-relaxed description-text"
+          class="text-sm leading-relaxed description-text"
         >
           {{ $props.location.description }}
         </p>

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 
+import type { Location } from '~/lib/db/schema';
+
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 type LocationsState = {
-  locations: any[];
+  locations: Location[];
   status: Status;
   error: string | null;
 };
@@ -42,7 +44,7 @@ export const useLocationsStore = defineStore('locationsStore', {
       }
     },
 
-    async addLocation(location: any) {
+    async addLocation(location: Location) {
       this.status = 'loading';
       this.error = null;
 

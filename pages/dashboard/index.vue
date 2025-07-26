@@ -55,44 +55,13 @@ onMounted(() => {
     </template>
 
     <template v-else-if="showLocations">
-      <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
-        <div
+      <div class="grid gap-6" style="grid-template-columns:repeat(auto-fit, minmax(min(300px, 100%), 1fr));">
+        <UiLocationCard
           v-for="location in locationsStore.locations"
           :key="location.id"
-          class="card card-compact bg-base-200 border border-gray-700/30 h-42"
-        >
-          <div class="card-body flex flex-col h-full">
-            <h3
-              :title="location.name"
-              class="text-xl font-bold truncate flex-shrink-0"
-            >
-              {{ location.name }}
-            </h3>
-
-            <div class="flex-1 overflow-hidden">
-              <p
-                :title="location.description"
-                class="font-light text-base-content/70 text-sm leading-relaxed description-text"
-              >
-                {{ location.description }}
-              </p>
-            </div>
-          </div>
-        </div>
+          :location="location"
+        />
       </div>
     </template>
   </div>
 </template>
-
-<style lang="css" scoped>
-.description-text {
-  display: -webkit-box;
-  max-height: calc(1.5rem * 3);
-  line-clamp: 3;
-  text-overflow: ellipsis;
-  word-wrap: break-word;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-</style>

@@ -55,7 +55,9 @@ onMounted(() => {
     </template>
 
     <template v-else-if="showLocations">
-      <div class="grid gap-6" style="grid-template-columns:repeat(auto-fit, minmax(min(300px, 100%), 1fr));">
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+      >
         <UiLocationCard
           v-for="location in locationsStore.locations"
           :key="location.id"

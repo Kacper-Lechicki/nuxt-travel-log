@@ -7,12 +7,13 @@ const authStore = useAuthStore();
     <div class="hero-content text-center min-h-96">
       <div class="max-w-md">
         <h1 class="text-5xl font-bold">
-          Travel Log
+          {{ $t('PAGES.INDEX.TITLE') }}
         </h1>
 
         <p class="py-6">
-          Keep track of your travels and adventures with this simple travel log app.
-          Add locations, photos, and notes to create a digital journal of your journeys.
+          <span>{{ $t('PAGES.INDEX.DESCRIPTION_1') }}</span>
+          <br>
+          <span>{{ $t('PAGES.INDEX.DESCRIPTION_2') }}</span>
         </p>
 
         <AuthButton v-if="!authStore.user" class="mx-auto" />
@@ -22,7 +23,7 @@ const authStore = useAuthStore();
           class="btn btn-primary mx-auto"
           to="/dashboard"
         >
-          Start Logging
+          <span>{{ $t('PAGES.INDEX.START_LOGGING_BUTTON') }}</span>
         </NuxtLink>
       </div>
     </div>

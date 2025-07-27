@@ -7,8 +7,24 @@ const carouselRef = ref<HTMLElement>();
 const canScrollLeft = ref(false);
 const canScrollRight = ref(false);
 
+let resizeObserver: ResizeObserver | null = null;
+
 onMounted(() => {
-  checkScrollability();
+  if (carouselRef.value) {
+    nextTick(checkScrollability);
+
+    resizeObserver = new ResizeObserver(() => {
+      checkScrollability();
+    });
+
+    resizeObserver.observe(carouselRef.value);
+  }
+});
+
+onUnmounted(() => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 
 function checkScrollability() {

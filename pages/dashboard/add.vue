@@ -37,11 +37,11 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div class="container max-w-3xl mr-auto flex flex-col gap-8">
-    <UiTitleWithDescription has-description title="Add Location">
+    <UiTitleWithDescription :title="$t('PAGES.DASHBOARD_ADD.TITLE')" has-description>
       <template #description>
-        <span>A location is a place you have traveled or will travel to. It can be a city, country, state or point of interest.</span>
+        <span>{{ $t('PAGES.DASHBOARD_ADD.DESCRIPTION_1') }}</span>
         <br>
-        <span>You can add specific times you visited this location after adding it.</span>
+        <span>{{ $t('PAGES.DASHBOARD_ADD.DESCRIPTION_2') }}</span>
       </template>
     </UiTitleWithDescription>
 
@@ -95,7 +95,7 @@ const onSubmit = handleSubmit(async (values) => {
           @click="router.back()"
         >
           <Icon name="tabler:arrow-left" size="21" />
-          <span>Cancel</span>
+          <span>{{ $t('PAGES.DASHBOARD_ADD.CANCEL_BUTTON') }}</span>
         </button>
 
         <button
@@ -103,11 +103,13 @@ const onSubmit = handleSubmit(async (values) => {
           class="btn btn-primary"
           type="submit"
         >
-          <span>Add</span>
+          <span>{{ $t('PAGES.DASHBOARD_ADD.SUBMIT_BUTTON') }}</span>
+
           <span
             v-if="locationsStore.isLoading"
             class="loading loading-spinner loading-sm flex-shrink-0"
           />
+
           <Icon
             v-else
             name="tabler:circle-plus-filled"

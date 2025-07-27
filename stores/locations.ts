@@ -60,7 +60,9 @@ export const useLocationsStore = defineStore('locations', {
 
       try {
         const data = await $fetch<Location[]>('/api/locations');
+
         this.locations = data || [];
+        this.syncWithMap(this.locations);
       }
       catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to fetch locations';
@@ -76,7 +78,9 @@ export const useLocationsStore = defineStore('locations', {
 
       try {
         const data = await $fetch<Location[]>('/api/locations');
+
         this.locations = data || [];
+        this.syncWithMap(this.locations);
       }
       catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to refresh locations';
@@ -114,6 +118,19 @@ export const useLocationsStore = defineStore('locations', {
       finally {
         this.isLoading = false;
       }
+    },
+
+    syncWithMap(locations: Location[]) {
+      const mapStore = useMapStore();
+
+      mapStore.clearMapPoints();
+
+      mapStore.mapPoints = locations.map((location: Location): MapPoint => ({
+        id: location.id,
+        label: location.name,
+        lat: location.lat,
+        long: location.long,
+      }));
     },
 
     clear(): void {

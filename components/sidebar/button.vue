@@ -12,6 +12,10 @@ const props = defineProps<{
   onlyIcon: boolean;
 }>();
 
+const emit = defineEmits<{
+  click: [event: MouseEvent];
+}>();
+
 const route = useRoute();
 const buttonRef = ref<HTMLElement | null>(null);
 const tooltipPosition = ref({ top: 0, left: 0 });
@@ -26,6 +30,10 @@ const linkClasses = computed(() => ({
   'bg-base-100 border-gray-700/100': isActive.value,
   'justify-center': props.onlyIcon,
 }));
+
+function handleClick(event: MouseEvent) {
+  emit('click', event);
+}
 
 function updateTooltipPosition() {
   if (!buttonRef.value)
@@ -60,9 +68,7 @@ function handleMouseEnter() {
 
   updateTooltipPosition();
 
-  showTooltipTimeout.value = setTimeout(() => {
-    showTooltip.value = true;
-  }, 300);
+  showTooltip.value = true;
 }
 
 function handleMouseLeave() {
@@ -105,6 +111,7 @@ onBeforeUnmount(() => {
       :class="linkClasses"
       :to="props.href"
       class="flex flex-nowrap justify-start font-medium gap-3 p-2 border border-gray-700/30 rounded hover:bg-base-content/5 h-11 hover:cursor-pointer overflow-hidden transition-colors duration-200"
+      @click="handleClick"
     >
       <Icon
         :name="props.icon"

@@ -36,7 +36,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="container max-w-3xl mx-auto flex flex-col gap-8">
+  <div class="container max-w-3xl mr-auto flex flex-col gap-8">
     <UiTitleWithDescription has-description title="Add Location">
       <template #description>
         <span>A location is a place you have traveled or will travel to. It can be a city, country, state or point of interest.</span>

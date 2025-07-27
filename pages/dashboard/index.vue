@@ -3,7 +3,7 @@ const locationsStore = useLocationsStore();
 </script>
 
 <template>
-  <div class="container mx-auto flex flex-col gap-9">
+  <div>
     <div v-if="locationsStore.isLoading" class="flex justify-center py-12">
       <span class="loading loading-spinner loading-xl" />
     </div>
@@ -32,13 +32,17 @@ const locationsStore = useLocationsStore();
     <div v-else-if="locationsStore.hasLocations" class="flex flex-col gap-9">
       <UiTitleWithDescription title="Locations" />
 
-      <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <UiLocationCard
-          v-for="location in locationsStore.locations"
-          :key="location.id"
-          :location="location"
-        />
-      </div>
+      <UiCarousel :offset="350">
+        <div class="flex gap-6 w-max">
+          <div
+            v-for="location in locationsStore.locations"
+            :key="location.id"
+            class="flex-shrink-0 w-80"
+          >
+            <UiLocationCard :location="location" />
+          </div>
+        </div>
+      </UiCarousel>
     </div>
   </div>
 </template>

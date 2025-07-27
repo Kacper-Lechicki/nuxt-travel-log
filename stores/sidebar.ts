@@ -1,33 +1,41 @@
 import { defineStore } from 'pinia';
 
-export type SidebarItem = {
-  id: string;
-  label: string;
-  icon: string;
-  href: string;
-};
-
 type SidebarState = {
   isSidebarOpen: boolean;
-  sidebarItems: SidebarItem[];
   isLoading: boolean;
 };
 
-export const useSidebarStore = defineStore('sidebarStore', {
+export const useSidebarStore = defineStore('sidebar', {
   state: (): SidebarState => ({
     isSidebarOpen: true,
-    sidebarItems: [],
     isLoading: false,
   }),
 
   actions: {
     setSidebarValueFromLocalStorage() {
-      this.isSidebarOpen = localStorage.getItem('isSidebarOpen') === 'true';
+      try {
+        const stored = localStorage.getItem('isSidebarOpen');
+        this.isSidebarOpen = stored !== 'false';
+      }
+      catch (error) {
+        console.error('Error reading from localStorage:', error);
+        this.isSidebarOpen = true;
+      }
     },
 
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
-      localStorage.setItem('isSidebarOpen', this.isSidebarOpen.toString());
+
+      try {
+        localStorage.setItem('isSidebarOpen', this.isSidebarOpen.toString());
+      }
+      catch (error) {
+        console.error('Error writing to localStorage:', error);
+      }
+    },
+
+    setLoading(value: boolean) {
+      this.isLoading = value;
     },
   },
 });

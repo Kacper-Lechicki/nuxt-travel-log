@@ -42,7 +42,7 @@ function handleItemClick() {
 
   <div
     :class="{
-      'border-t border-gray-700/30': props.mobileMode,
+      'border-t border-r border-gray-700/30': props.mobileMode,
     }"
     class="flex-1 px-3 py-6 flex flex-col gap-3 overflow-hidden"
   >

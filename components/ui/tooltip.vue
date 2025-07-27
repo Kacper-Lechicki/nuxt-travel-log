@@ -1,89 +1,60 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useTooltip } from '@/composables/use-tooltip';
+
+type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 
 type Props = {
-  text: string;
   show: boolean;
   targetElement: HTMLElement | null;
+  text: string;
+  placement?: TooltipPlacement;
+  offset?: number;
+  autoFlip?: boolean;
 };
 
-const props = defineProps<Props>();
-
-const tooltipPosition = ref({ top: 0, left: 0 });
-let scrollTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
-function updateTooltipPosition() {
-  if (!props.targetElement)
-    return;
-
-  const rect = props.targetElement.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-  const tooltipWidth = 200;
-
-  let left = rect.right + 8;
-
-  if (left + tooltipWidth > viewportWidth) {
-    left = rect.left - tooltipWidth - 8;
-  }
-
-  tooltipPosition.value = {
-    top: rect.top + rect.height / 2,
-    left: Math.max(8, left),
-  };
-}
-
-function debouncedUpdateTooltip() {
-  if (scrollTimeoutId)
-    clearTimeout(scrollTimeoutId);
-
-  scrollTimeoutId = setTimeout(updateTooltipPosition, 16);
-}
-
-watch(() => props.show, (newShow) => {
-  if (newShow) {
-    updateTooltipPosition();
-  }
+const props = withDefaults(defineProps<Props>(), {
+  placement: 'auto',
+  offset: 8,
+  autoFlip: true,
 });
 
-watch(() => props.targetElement, () => {
-  if (props.show) {
-    updateTooltipPosition();
-  }
+const {
+  position,
+  actualPlacement,
+  tooltipRef,
+  arrowClasses,
+  setupTooltip,
+} = useTooltip({
+  placement: props.placement,
+  offset: props.offset,
+  autoFlip: props.autoFlip,
 });
 
-onMounted(() => {
-  window.addEventListener('scroll', debouncedUpdateTooltip, {
-    passive: true,
-    capture: true,
-  });
-
-  window.addEventListener('resize', updateTooltipPosition, { passive: true });
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', debouncedUpdateTooltip, { capture: true });
-  window.removeEventListener('resize', updateTooltipPosition);
-
-  if (scrollTimeoutId)
-    clearTimeout(scrollTimeoutId);
-});
+setupTooltip(
+  toRef(props, 'show'),
+  toRef(props, 'targetElement'),
+);
 </script>
 
 <template>
   <Teleport to="body">
     <Transition name="tooltip">
       <div
-        v-if="show"
+        v-if="show && targetElement"
+        ref="tooltipRef"
+        :class="[
+          `tooltip-${actualPlacement}`,
+        ]"
         :style="{
-          'position': 'fixed',
-          'top': `${tooltipPosition.top}px`,
-          'left': `${tooltipPosition.left}px`,
-          'transform': 'translateY(-50%)',
-          'z-index': '9999',
+          position: 'fixed',
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          zIndex: 9999,
         }"
-        class="bg-base-200 text-base-content text-sm px-3 py-1 rounded shadow-lg whitespace-nowrap pointer-events-none"
+        class="px-3 py-2 text-sm font-medium bg-base-300 rounded-lg shadow-lg pointer-events-none whitespace-nowrap"
       >
-        {{ text }}
+        <span>{{ text }}</span>
+        <div :class="arrowClasses" />
       </div>
     </Transition>
   </Teleport>
@@ -92,12 +63,32 @@ onBeforeUnmount(() => {
 <style scoped>
 .tooltip-enter-active,
 .tooltip-leave-active {
-  transition: all 0.2s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
-.tooltip-enter-from,
-.tooltip-leave-to {
+.tooltip-top.tooltip-enter-from,
+.tooltip-top.tooltip-leave-to {
   opacity: 0;
-  transform: translateY(-50%) scale(0.9);
+  transform: translateY(4px);
+}
+
+.tooltip-bottom.tooltip-enter-from,
+.tooltip-bottom.tooltip-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.tooltip-left.tooltip-enter-from,
+.tooltip-left.tooltip-leave-to {
+  opacity: 0;
+  transform: translateX(4px);
+}
+
+.tooltip-right.tooltip-enter-from,
+.tooltip-right.tooltip-leave-to {
+  opacity: 0;
+  transform: translateX(-4px);
 }
 </style>

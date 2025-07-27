@@ -1,17 +1,39 @@
 <script lang="ts" setup>
-const props = defineProps<{
-  variant?: 'desktop' | 'mobile';
-}>();
+import { useScrollLockWatch } from '@/composables/use-scroll-lock';
 
 const sidebarStore = useSidebarStore();
 
-const variant = computed(() => props.variant || 'desktop');
-const isDesktop = computed(() => variant.value === 'desktop');
-const isMobile = computed(() => variant.value === 'mobile');
+const isMobile = ref(false);
+
+function checkIsMobile() {
+  if (typeof window === 'undefined')
+    return false;
+
+  return window.innerWidth < 896;
+}
 
 onMounted(() => {
   sidebarStore.setSidebarValueFromLocalStorage();
+  isMobile.value = checkIsMobile();
+
+  const handleResize = () => {
+    isMobile.value = checkIsMobile();
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+  });
 });
+
+const isDesktop = computed(() => !isMobile.value);
+
+const shouldLockScroll = computed(() => {
+  return isMobile.value && sidebarStore.isSidebarOpen;
+});
+
+useScrollLockWatch(shouldLockScroll);
 
 const topMenuItems = [
   { href: '/dashboard', icon: 'tabler:map', label: 'Locations' },

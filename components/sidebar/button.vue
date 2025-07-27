@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 defineOptions({
   inheritAttrs: false,
@@ -18,12 +18,7 @@ const emit = defineEmits<{
 
 const route = useRoute();
 const buttonRef = ref<HTMLElement | null>(null);
-const tooltipPosition = ref({ top: 0, left: 0 });
 const showTooltip = ref(false);
-
-let scrollTimeoutId: ReturnType<typeof setTimeout> | null = null;
-
-const showTooltipTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 const isActive = computed(() => route.path === props.href);
 
 const linkClasses = computed(() => ({
@@ -35,70 +30,19 @@ function handleClick(event: MouseEvent) {
   emit('click', event);
 }
 
-function updateTooltipPosition() {
-  if (!buttonRef.value)
-    return;
-
-  const rect = buttonRef.value.getBoundingClientRect();
-  const viewportWidth = window.innerWidth;
-  const tooltipWidth = 200;
-
-  let left = rect.right + 8;
-
-  if (left + tooltipWidth > viewportWidth) {
-    left = rect.left - tooltipWidth - 8;
-  }
-
-  tooltipPosition.value = {
-    top: rect.top + rect.height / 2,
-    left: Math.max(8, left),
-  };
-}
-
-function debouncedUpdateTooltip() {
-  if (scrollTimeoutId)
-    clearTimeout(scrollTimeoutId);
-
-  scrollTimeoutId = setTimeout(updateTooltipPosition, 16);
-}
-
 function handleMouseEnter() {
   if (!props.onlyIcon)
     return;
-
-  updateTooltipPosition();
 
   showTooltip.value = true;
 }
 
 function handleMouseLeave() {
-  if (showTooltipTimeout.value) {
-    clearTimeout(showTooltipTimeout.value);
-    showTooltipTimeout.value = null;
-  }
+  if (!props.onlyIcon)
+    return;
 
   showTooltip.value = false;
 }
-
-onMounted(() => {
-  window.addEventListener('scroll', debouncedUpdateTooltip, {
-    passive: true,
-    capture: true,
-  });
-
-  window.addEventListener('resize', updateTooltipPosition, { passive: true });
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', debouncedUpdateTooltip, { capture: true });
-  window.removeEventListener('resize', updateTooltipPosition);
-
-  if (scrollTimeoutId)
-    clearTimeout(scrollTimeoutId);
-
-  if (showTooltipTimeout.value)
-    clearTimeout(showTooltipTimeout.value);
-});
 </script>
 
 <template>
@@ -125,13 +69,11 @@ onBeforeUnmount(() => {
     </NuxtLink>
   </div>
 
-  <Teleport to="body">
-    <UiTooltip
-      :show="showTooltip"
-      :target-element="buttonRef"
-      :text="props.label"
-    />
-  </Teleport>
+  <UiTooltip
+    :show="showTooltip"
+    :target-element="buttonRef"
+    :text="props.label"
+  />
 </template>
 
 <style scoped>

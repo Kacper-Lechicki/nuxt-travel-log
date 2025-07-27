@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 left-0 navbar bg-primary text-primary-content z-[1000]">
+  <header class="sticky top-0 left-0 navbar dark:bg-primary/75 text-primary-content z-[1000]">
     <div class="navbar-start">
       <NuxtLink class="flex items-center gap-3 btn btn-ghost text-xl" to="/">
         <Icon name="tabler:map" size="21" />

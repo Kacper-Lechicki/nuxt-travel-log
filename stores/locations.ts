@@ -2,11 +2,25 @@ import { defineStore } from 'pinia';
 
 import type { InsertLocation, Location } from '~/lib/db/schema';
 
+type SidebarItem = {
+  id: string;
+  label: string;
+  icon: string;
+  href: string;
+};
+
 type LocationsState = {
   locations: Location[];
   isLoading: boolean;
   error: string | null;
   isInitialized: boolean;
+};
+
+type AddLocationResponse = {
+  success: boolean;
+  data?: Location;
+  error: string | null;
+  validationErrors?: any;
 };
 
 export const useLocationsStore = defineStore('locations', {
@@ -18,19 +32,24 @@ export const useLocationsStore = defineStore('locations', {
   }),
 
   getters: {
-    count: state => state.isInitialized && state.locations.length,
-    isEmpty: state => state.isInitialized && !state.isLoading && !state.locations.length,
-    sidebarItems: state => state.isInitialized && state.locations.map(location => ({
-      id: `location-${location.id}`,
-      label: location.name,
-      icon: 'tabler:map-pin-filled',
-      href: `#`,
-    })),
-    hasLocations: state => state.isInitialized && !state.isLoading && state.locations.length,
+    count: (state): number => (state.isInitialized && state.locations.length) || 0,
+    isEmpty: (state): boolean => state.isInitialized && !state.isLoading && !state.locations.length,
+    sidebarItems: (state): SidebarItem[] => {
+      if (!state.isInitialized)
+        return [];
+
+      return state.locations.map(location => ({
+        id: `location-${location.id}`,
+        label: location.name,
+        icon: 'tabler:map-pin-filled',
+        href: '#',
+      }));
+    },
+    hasLocations: (state): boolean => state.isInitialized && !state.isLoading && state.locations.length > 0,
   },
 
   actions: {
-    async fetch() {
+    async fetch(): Promise<void> {
       this.isInitialized = true;
 
       if (this.locations.length > 0)
@@ -51,7 +70,7 @@ export const useLocationsStore = defineStore('locations', {
       }
     },
 
-    async refresh() {
+    async refresh(): Promise<void> {
       this.isLoading = true;
       this.error = null;
 
@@ -67,7 +86,7 @@ export const useLocationsStore = defineStore('locations', {
       }
     },
 
-    async add(location: InsertLocation) {
+    async add(location: InsertLocation): Promise<AddLocationResponse> {
       this.isLoading = true;
       this.error = null;
 
@@ -81,7 +100,7 @@ export const useLocationsStore = defineStore('locations', {
 
         await this.refresh();
 
-        return { success: true, data };
+        return { success: true, data, error: null };
       }
       catch (error: any) {
         this.error = error.data?.statusMessage || 'Failed to add location.';
@@ -97,7 +116,7 @@ export const useLocationsStore = defineStore('locations', {
       }
     },
 
-    clear() {
+    clear(): void {
       this.locations = [];
       this.error = null;
       this.isLoading = false;
@@ -105,3 +124,5 @@ export const useLocationsStore = defineStore('locations', {
     },
   },
 });
+
+export type { AddLocationResponse, SidebarItem };

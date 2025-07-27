@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     'nuxt-csurf',
     'nuxt-maplibre',
+    '@nuxtjs/i18n',
   ],
 
   css: ['~/assets/css/main.css'],
@@ -48,6 +49,13 @@ export default defineNuxtConfig({
         provider: 'google',
         weights: [100, 200, 300, 400, 500, 600, 700, 800],
       },
+    ],
+  },
+
+  i18n: {
+    defaultLocale: 'en',
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
     ],
   },
 });

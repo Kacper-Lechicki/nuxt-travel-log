@@ -1,0 +1,37 @@
+{
+  "COMPONENTS": {
+    "AUTH_BUTTON": {
+      "SIGN_OUT": "Sign out",
+      "SIGN_IN_WITH_GITHUB": "Sign In With Github",
+      "SIGN_IN_SHORT": "Sign In"
+    },
+    "NAVBAR": {
+      "TRAVEL_LOG": "Travel Log"
+    }
+  },
+  "PAGES": {
+    "DASHBOARD": {
+      "EMPTY_STATE_TITLE": "Locations",
+      "EMPTY_STATE_DESCRIPTION": "Add a location to get started.",
+      "EMPTY_STATE_BUTTON_TITLE": "Add Location",
+      "TITLE": "Locations"
+    },
+    "DASHBOARD_ADD": {
+      "TITLE": "Add Location",
+      "DESCRIPTION_1": "A location is a place you have traveled or will travel to. It can be a city, country, state or point of interest.",
+      "DESCRIPTION_2": "You can add specific times you visited this location after adding it.",
+      "CANCEL_BUTTON": "Cancel",
+      "SUBMIT_BUTTON": "Add"
+    },
+    "ERROR": {
+      "TITLE": "Oh no!",
+      "HOME_BUTTON": "Home"
+    },
+    "INDEX": {
+      "TITLE": "Travel Log",
+      "DESCRIPTION_1": "Keep track of your travels and adventures with this simple travel log app.",
+      "DESCRIPTION_2": "Add locations, photos, and notes to create a digital journal of your journeys.",
+      "START_LOGGING_BUTTON": "Start Logging"
+    }
+  }
+}

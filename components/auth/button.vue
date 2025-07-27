@@ -22,7 +22,7 @@ const authStore = useAuthStore();
       <li>
         <NuxtLink to="/sign-out">
           <Icon name="tabler:logout-2" size="18" />
-          <span>Sign out</span>
+          <span>{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_OUT') }}</span>
         </NuxtLink>
       </li>
     </ul>
@@ -35,7 +35,8 @@ const authStore = useAuthStore();
     @click="authStore.signIn"
   >
     <span class="truncate min-w-0">
-      Sign In<span class="hidden md:inline"> With Github</span>
+      <span class="md:hidden">{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_IN_SHORT') }}</span>
+      <span class="hidden md:inline">{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_IN_WITH_GITHUB') }}</span>
     </span>
 
     <span v-if="authStore.isLoading" class="loading loading-spinner loading-sm flex-shrink-0" />

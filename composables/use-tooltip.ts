@@ -29,15 +29,13 @@ export function useTooltip(options: UseTooltipOptions = {}) {
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
     };
 
     const space = {
-      top: targetRect.top - viewport.scrollY,
-      bottom: viewport.height - (targetRect.bottom - viewport.scrollY),
-      left: targetRect.left - viewport.scrollX,
-      right: viewport.width - (targetRect.right - viewport.scrollX),
+      top: targetRect.top,
+      bottom: viewport.height - targetRect.bottom,
+      left: targetRect.left,
+      right: viewport.width - targetRect.right,
     };
 
     if (placement !== 'auto') {
@@ -83,9 +81,6 @@ export function useTooltip(options: UseTooltipOptions = {}) {
     tooltipRect: DOMRect,
     currentPlacement: Exclude<TooltipPlacement, 'auto'>,
   ): TooltipPosition {
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-
     let x = 0;
     let y = 0;
 
@@ -108,26 +103,23 @@ export function useTooltip(options: UseTooltipOptions = {}) {
         break;
     }
 
-    x += scrollX;
-    y += scrollY;
-
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
 
-    if (x < scrollX + 8) {
-      x = scrollX + 8;
+    if (x < 8) {
+      x = 8;
     }
-    else if (x + tooltipRect.width > scrollX + viewport.width - 8) {
-      x = scrollX + viewport.width - tooltipRect.width - 8;
+    else if (x + tooltipRect.width > viewport.width - 8) {
+      x = viewport.width - tooltipRect.width - 8;
     }
 
-    if (y < scrollY + 8) {
-      y = scrollY + 8;
+    if (y < 8) {
+      y = 8;
     }
-    else if (y + tooltipRect.height > scrollY + viewport.height - 8) {
-      y = scrollY + viewport.height - tooltipRect.height - 8;
+    else if (y + tooltipRect.height > viewport.height - 8) {
+      y = viewport.height - tooltipRect.height - 8;
     }
 
     return { x, y };
@@ -180,7 +172,7 @@ export function useTooltip(options: UseTooltipOptions = {}) {
         if (show.value && targetElement.value) {
           nextTick(() => {
             updatePosition(targetElement.value);
-          });
+          }).then();
         }
       },
       { immediate: true },

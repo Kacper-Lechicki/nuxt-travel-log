@@ -10,12 +10,12 @@ const locationsStore = useLocationsStore();
 
     <UiTitleWithDescription
       v-else-if="locationsStore.isEmpty"
+      :title="$t('PAGES.DASHBOARD.EMPTY_STATE_TITLE')"
       has-additional
       has-description
-      title="Locations"
     >
       <template #description>
-        <span>Add a location to get started.</span>
+        <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_DESCRIPTION') }}</span>
       </template>
 
       <template #additional>
@@ -23,14 +23,14 @@ const locationsStore = useLocationsStore();
           class="btn btn-primary mt-3"
           to="/dashboard/add"
         >
-          <span>Add Location</span>
+          <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_BUTTON_TITLE') }}</span>
           <Icon name="tabler:circle-plus-filled" size="21" />
         </NuxtLink>
       </template>
     </UiTitleWithDescription>
 
     <div v-else-if="locationsStore.hasLocations" class="flex flex-col gap-9">
-      <UiTitleWithDescription title="Locations" />
+      <UiTitleWithDescription :title="$t('PAGES.DASHBOARD.TITLE')" />
 
       <UiCarousel :offset="350">
         <div class="flex gap-6 w-max">

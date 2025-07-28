@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-const props = defineProps<{
+type Props = {
   offset: number;
-}>();
+};
+
+const props = defineProps<Props>();
+
+let resizeObserver: ResizeObserver | null = null;
 
 const carouselRef = ref<HTMLElement>();
 const canScrollLeft = ref(false);
 const canScrollRight = ref(false);
-
-let resizeObserver: ResizeObserver | null = null;
 
 onMounted(() => {
   if (carouselRef.value) {

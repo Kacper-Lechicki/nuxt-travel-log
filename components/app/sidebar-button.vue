@@ -1,36 +1,51 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
+type Props = {
+  name: string;
+  icon: string;
+  href: string;
+  onlyIcon?: boolean;
+  accent?: boolean;
+};
+
+type Emits = {
+  click: [event: MouseEvent];
+  mouseenter: [];
+  mouseleave: [];
+};
+
 defineOptions({
   inheritAttrs: false,
 });
 
-const props = defineProps<{
-  label: string;
-  icon: string;
-  href: string;
-  onlyIcon: boolean;
-}>();
+const props = withDefaults(defineProps<Props>(), {
+  onlyIcon: false,
+});
 
-const emit = defineEmits<{
-  click: [event: MouseEvent];
-}>();
+const emits = defineEmits<Emits>();
 
 const route = useRoute();
-const buttonRef = ref<HTMLElement | null>(null);
+
 const showTooltip = ref(false);
+const buttonRef = ref<HTMLElement | null>(null);
+
 const isActive = computed(() => route.path === props.href);
 
 const linkClasses = computed(() => ({
-  'bg-base-100 border-gray-700/100': isActive.value,
+  'bg-base-100 border-gray-700': isActive.value,
   'justify-center': props.onlyIcon,
+  'bg-accent/30': props.accent,
+  'hover:bg-base-content/5': !props.accent,
 }));
 
 function handleClick(event: MouseEvent) {
-  emit('click', event);
+  emits('click', event);
 }
 
 function handleMouseEnter() {
+  emits('mouseenter');
+
   if (!props.onlyIcon)
     return;
 
@@ -38,6 +53,8 @@ function handleMouseEnter() {
 }
 
 function handleMouseLeave() {
+  emits('mouseleave');
+
   if (!props.onlyIcon)
     return;
 
@@ -54,7 +71,7 @@ function handleMouseLeave() {
     <NuxtLink
       :class="linkClasses"
       :to="props.href"
-      class="flex flex-nowrap justify-start font-medium gap-3 p-2 border border-gray-700/30 rounded hover:bg-base-content/5 h-11 hover:cursor-pointer overflow-hidden transition-colors duration-200"
+      class="flex flex-nowrap justify-start font-medium gap-3 p-2 border border-gray-700/30 rounded h-11 hover:cursor-pointer overflow-hidden transition-colors duration-200"
       @click="handleClick"
     >
       <Icon
@@ -64,7 +81,7 @@ function handleMouseLeave() {
       />
 
       <Transition name="grow">
-        <span v-if="!props.onlyIcon" class="flex-shrink-0">{{ props.label }}</span>
+        <span v-if="!props.onlyIcon" class="flex-shrink-0">{{ props.name }}</span>
       </Transition>
     </NuxtLink>
   </div>
@@ -72,7 +89,7 @@ function handleMouseLeave() {
   <UiTooltip
     :show="showTooltip"
     :target-element="buttonRef"
-    :text="props.label"
+    :text="props.name"
   />
 </template>
 

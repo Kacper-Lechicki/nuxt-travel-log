@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-const props = defineProps<{
+type Props = {
   title: string;
   hasDescription?: boolean;
   hasAdditional?: boolean;
-}>();
+};
+
+const props = defineProps<Props>();
 </script>
 
 <template>

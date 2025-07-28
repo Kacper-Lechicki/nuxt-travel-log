@@ -1,16 +1,20 @@
 <script lang="ts" setup>
 import { useLocationsStore } from '@/stores/locations';
 
-const props = defineProps<{
+type Props = {
   isOpen: boolean;
   mobileMode?: boolean;
-}>();
+};
 
-const emit = defineEmits<{
+type Emits = {
   itemClick: [];
-}>();
+};
+
+const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
 
 const locationsStore = useLocationsStore();
+const mapStore = useMapStore();
 </script>
 
 <template>
@@ -25,15 +29,18 @@ const locationsStore = useLocationsStore();
     <div :class="{ 'pr-2': props.mobileMode }" class="flex flex-col gap-3">
       <div v-if="locationsStore.isLoading" class="skeleton w-full h-6" />
 
-      <SidebarButton
+      <AppSidebarButton
         v-for="item in locationsStore.sidebarItems"
         v-else
         :key="item.id"
+        :accent="mapStore.activePoint?.id === item.location?.id"
         :href="item.href"
         :icon="item.icon"
-        :label="item.label"
+        :name="item.name"
         :only-icon="!props.isOpen && !props.mobileMode"
-        @click="emit('itemClick')"
+        @click="emits('itemClick')"
+        @mouseenter="mapStore.activePoint = (item.location || null)"
+        @mouseleave="mapStore.activePoint = null"
       />
     </div>
   </div>

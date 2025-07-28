@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{
+type Props = {
   label: string;
   name: string;
   type?: 'text' | 'textarea' | 'number';
@@ -7,7 +7,9 @@ const props = defineProps<{
   noResize?: boolean;
   height?: number;
   disabled?: boolean;
-}>();
+};
+
+const props = defineProps<Props>();
 </script>
 
 <template>

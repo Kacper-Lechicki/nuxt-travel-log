@@ -9,7 +9,7 @@
 
     <div class="flex items-center md:gap-2 navbar-end">
       <UiThemeToggle />
-      <AuthButton />
+      <AppAuthButton />
     </div>
   </header>
 </template>

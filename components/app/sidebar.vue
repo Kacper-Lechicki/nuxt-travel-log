@@ -1,54 +1,35 @@
 <script lang="ts" setup>
 import { useScrollLockWatch } from '@/composables/use-scroll-lock';
+import { useBreakpoints } from '~/composables/use-breakpoints';
 
 const sidebarStore = useSidebarStore();
 
-const isMobile = ref(false);
+const { isMobile, isDesktop } = useBreakpoints();
 
-function checkIsMobile() {
-  if (typeof window === 'undefined')
-    return false;
+const topMenuItems = [
+  { href: '/dashboard', icon: 'tabler:map', name: 'Locations' },
+  { href: '/dashboard/add', icon: 'tabler:circle-plus-filled', name: 'Add Location' },
+];
 
-  return window.innerWidth < 896;
-}
-
-onMounted(() => {
-  sidebarStore.setSidebarValueFromLocalStorage();
-  isMobile.value = checkIsMobile();
-
-  const handleResize = () => {
-    isMobile.value = checkIsMobile();
-  };
-
-  window.addEventListener('resize', handleResize);
-
-  onUnmounted(() => {
-    window.removeEventListener('resize', handleResize);
-  });
-});
-
-const isDesktop = computed(() => !isMobile.value);
+const bottomMenuItems = [
+  { href: '/sign-out', icon: 'tabler:logout-2', name: 'Sign Out' },
+];
 
 const shouldLockScroll = computed(() => {
   return isMobile.value && sidebarStore.isSidebarOpen;
 });
 
-useScrollLockWatch(shouldLockScroll);
-
-const topMenuItems = [
-  { href: '/dashboard', icon: 'tabler:map', label: 'Locations' },
-  { href: '/dashboard/add', icon: 'tabler:circle-plus-filled', label: 'Add Location' },
-];
-
-const bottomMenuItems = [
-  { href: '/sign-out', icon: 'tabler:logout-2', label: 'Sign Out' },
-];
+onMounted(() => {
+  sidebarStore.setSidebarValueFromLocalStorage();
+});
 
 function handleMobileClick() {
   if (isMobile.value) {
     sidebarStore.toggleSidebar();
   }
 }
+
+useScrollLockWatch(shouldLockScroll);
 </script>
 
 <template>
@@ -58,9 +39,9 @@ function handleMobileClick() {
       'lg:w-80': sidebarStore.isSidebarOpen,
       'lg:w-17': !sidebarStore.isSidebarOpen,
     }"
-    class="hidden lg:flex flex-col bg-base-300 transition-all duration-300 sticky top-[56px] h-[calc(100vh-56px)] z-[100]"
+    class="flex flex-col bg-base-300 transition-all duration-300 sticky top-[56px] h-[calc(100vh-56px)] z-[100]"
   >
-    <SidebarContent
+    <AppSidebarContent
       :bottom-items="bottomMenuItems"
       :is-open="sidebarStore.isSidebarOpen"
       :show-toggle="true"
@@ -75,7 +56,7 @@ function handleMobileClick() {
       'opacity-100 pointer-events-auto': sidebarStore.isSidebarOpen,
       'opacity-0 pointer-events-none': !sidebarStore.isSidebarOpen,
     }"
-    class="lg:hidden fixed top-[112px] inset-x-0 bottom-0 z-50 transition-all duration-300"
+    class="fixed top-[112px] inset-x-0 bottom-0 z-50 transition-all duration-300"
     style="background-color: rgba(0, 0, 0, 0.85);"
     @click="sidebarStore.toggleSidebar"
   >
@@ -87,7 +68,7 @@ function handleMobileClick() {
       class="h-full bg-base-300 flex flex-col transition-all duration-300 ease-in-out overflow-hidden"
       @click.stop
     >
-      <SidebarContent
+      <AppSidebarContent
         :bottom-items="bottomMenuItems"
         :is-open="true"
         :mobile-mode="true"

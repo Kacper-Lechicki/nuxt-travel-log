@@ -12,11 +12,10 @@ const authStore = useAuthStore();
 
         <p class="py-6">
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_1') }}</span>
-          <br>
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_2') }}</span>
         </p>
 
-        <AuthButton v-if="!authStore.user" class="mx-auto" />
+        <AppAuthButton v-if="!authStore.user" class="mx-auto" />
 
         <NuxtLink
           v-else

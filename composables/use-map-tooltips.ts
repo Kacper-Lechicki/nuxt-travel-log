@@ -8,19 +8,19 @@ type TooltipState = {
 export function useMapTooltips() {
   const tooltipStates = reactive<Record<number, TooltipState>>({});
 
-  function handleMouseEnter(pointId: number, event: MouseEvent) {
-    if (!tooltipStates[pointId]) {
-      tooltipStates[pointId] = { visible: false, element: null };
+  function handleMouseEnter(point: MapPoint, event: MouseEvent) {
+    if (!tooltipStates[point.id]) {
+      tooltipStates[point.id] = { visible: false, element: null };
     }
 
-    tooltipStates[pointId].element = event.currentTarget as HTMLElement;
-    tooltipStates[pointId].visible = true;
+    tooltipStates[point.id].element = event.currentTarget as HTMLElement;
+    tooltipStates[point.id].visible = true;
   }
 
-  function handleMouseLeave(pointId: number) {
-    if (tooltipStates[pointId]) {
-      tooltipStates[pointId].visible = false;
-      tooltipStates[pointId].element = null;
+  function handleMouseLeave(point: MapPoint) {
+    if (tooltipStates[point.id]) {
+      tooltipStates[point.id].visible = false;
+      tooltipStates[point.id].element = null;
     }
   }
 

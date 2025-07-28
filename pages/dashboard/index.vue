@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 const locationsStore = useLocationsStore();
+
+const { isDesktop } = useBreakpoints();
 </script>
 
 <template>
@@ -29,20 +31,18 @@ const locationsStore = useLocationsStore();
       </template>
     </UiTitleWithDescription>
 
-    <div v-else-if="locationsStore.hasLocations" class="flex flex-col gap-9">
+    <div v-else-if="locationsStore.hasLocations" class="flex flex-col gap-9 h-full">
       <UiTitleWithDescription :title="$t('PAGES.DASHBOARD.TITLE')" />
 
-      <UiCarousel :offset="350">
-        <div class="flex gap-6 w-max">
-          <div
-            v-for="location in locationsStore.locations"
-            :key="location.id"
-            class="flex-shrink-0 w-80"
-          >
-            <UiLocationCard :location="location" />
-          </div>
-        </div>
-      </UiCarousel>
+      <div
+        :class="{
+          'h-[calc(100vh-56px-84px-32px-2.25rem)]': isDesktop,
+          'h-[calc(100vh-112px-84px-32px-2.25rem)]': !isDesktop,
+        }"
+        class="rounded overflow-hidden"
+      >
+        <UiMap />
+      </div>
     </div>
   </div>
 </template>

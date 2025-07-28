@@ -9,6 +9,7 @@ const { handleSubmit, errors, meta, setErrors } = useForm({
 
 const router = useRouter();
 const locationsStore = useLocationsStore();
+
 const submitted = ref(false);
 
 onMounted(() => {
@@ -36,7 +37,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="container max-w-3xl mr-auto flex flex-col gap-8">
+  <div class="container max-w-3xl mx-auto flex flex-col gap-8">
     <UiTitleWithDescription :title="$t('PAGES.DASHBOARD_ADD.TITLE')" has-description>
       <template #description>
         <span>{{ $t('PAGES.DASHBOARD_ADD.DESCRIPTION_1') }}</span>

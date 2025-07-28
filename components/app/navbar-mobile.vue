@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 const sidebarStore = useSidebarStore();
+
+const { isDesktop } = useBreakpoints();
 </script>
 
 <template>
-  <div class="lg:hidden bg-base-300 p-4 sticky top-[56px] z-40">
+  <div v-if="!isDesktop" class="bg-base-300 p-4 sticky top-[56px] z-40">
     <button
       class="rounded hover:cursor-pointer hover:bg-base-content/5 w-[28px] h-[28px] flex items-center justify-center"
       @click="sidebarStore.toggleSidebar"

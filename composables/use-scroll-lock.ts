@@ -1,24 +1,21 @@
+import { onUnmounted, readonly, ref, watch } from 'vue';
+
 export function useScrollLock() {
   const isLocked = ref(false);
   let originalScrollY = 0;
-
-  function getScrollY(): number {
-    if (typeof window === 'undefined')
-      return 0;
-
-    return window.scrollY ?? window.scrollY ?? document.documentElement.scrollTop ?? document.body.scrollTop ?? 0;
-  }
 
   function lockScroll() {
     if (isLocked.value || typeof window === 'undefined')
       return;
 
-    originalScrollY = getScrollY();
+    originalScrollY = window.scrollY;
 
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${originalScrollY}px`;
-    document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${originalScrollY}px;
+      width: 100%;
+      overflow: hidden;
+    `;
 
     isLocked.value = true;
   }
@@ -27,38 +24,17 @@ export function useScrollLock() {
     if (!isLocked.value || typeof window === 'undefined')
       return;
 
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.body.style.overflow = '';
-
-    if (window.scrollTo) {
-      window.scrollTo(0, originalScrollY);
-    }
-    else if (document.documentElement.scrollTop !== undefined) {
-      document.documentElement.scrollTop = originalScrollY;
-    }
-    else if (document.body.scrollTop !== undefined) {
-      document.body.scrollTop = originalScrollY;
-    }
+    document.body.style.cssText = '';
+    window.scrollTo(0, originalScrollY);
 
     isLocked.value = false;
   }
 
   function toggleScrollLock(shouldLock: boolean) {
-    if (shouldLock) {
-      lockScroll();
-    }
-    else {
-      unlockScroll();
-    }
+    shouldLock ? lockScroll() : unlockScroll();
   }
 
-  onUnmounted(() => {
-    if (isLocked.value) {
-      unlockScroll();
-    }
-  });
+  onUnmounted(unlockScroll);
 
   return {
     isLocked: readonly(isLocked),
@@ -68,16 +44,10 @@ export function useScrollLock() {
   };
 }
 
-export function useScrollLockWatch(condition: Ref<boolean>) {
-  const scrollLock = useScrollLock();
+export function useScrollLockWatch(condition: Ref) {
+  const { toggleScrollLock, ...scrollLock } = useScrollLock();
 
-  watch(
-    condition,
-    (shouldLock) => {
-      scrollLock.toggleScrollLock(shouldLock);
-    },
-    { immediate: true },
-  );
+  watch(condition, toggleScrollLock, { immediate: true });
 
-  return scrollLock;
+  return { toggleScrollLock, ...scrollLock };
 }

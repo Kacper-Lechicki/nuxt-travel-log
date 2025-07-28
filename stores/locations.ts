@@ -4,9 +4,10 @@ import type { InsertLocation, Location } from '~/lib/db/schema';
 
 type SidebarItem = {
   id: string;
-  label: string;
+  name: string;
   icon: string;
   href: string;
+  location?: MapPoint;
 };
 
 type LocationsState = {
@@ -40,9 +41,10 @@ export const useLocationsStore = defineStore('locations', {
 
       return state.locations.map(location => ({
         id: `location-${location.id}`,
-        label: location.name,
+        name: location.name,
         icon: 'tabler:map-pin-filled',
         href: '#',
+        location,
       }));
     },
     hasLocations: (state): boolean => state.isInitialized && !state.isLoading && state.locations.length > 0,
@@ -124,13 +126,7 @@ export const useLocationsStore = defineStore('locations', {
       const mapStore = useMapStore();
 
       mapStore.clearMapPoints();
-
-      mapStore.mapPoints = locations.map((location: Location): MapPoint => ({
-        id: location.id,
-        label: location.name,
-        lat: location.lat,
-        long: location.long,
-      }));
+      mapStore.mapPoints = locations;
     },
 
     clear(): void {

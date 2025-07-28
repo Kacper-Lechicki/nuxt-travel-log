@@ -5,6 +5,12 @@ type SidebarState = {
   isLoading: boolean;
 };
 
+export type MenuItem = {
+  href: string;
+  icon: string;
+  name: string;
+};
+
 export const useSidebarStore = defineStore('sidebar', {
   state: (): SidebarState => ({
     isSidebarOpen: true,

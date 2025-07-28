@@ -1,0 +1,51 @@
+{
+  "COMPONENTS": {
+    "AUTH_BUTTON": {
+      "SIGN_OUT": "Wyloguj",
+      "SIGN_IN_WITH_GITHUB": "Zaloguj z Github",
+      "SIGN_IN_SHORT": "Zaloguj"
+    },
+    "NAVBAR": {
+      "TRAVEL_LOG": "Travel Log"
+    },
+    "MAP": {
+      "DRAG_TO_DESIRED_LOCATION": "Przeciągnij do żądanej lokalizacji"
+    },
+    "SIDEBAR": {
+      "LOCATIONS": "Lokalizacje",
+      "ADD_LOCATION": "Dodaj lokalizację",
+      "SIGN_OUT": "Wyloguj"
+    }
+  },
+  "PAGES": {
+    "DASHBOARD": {
+      "EMPTY_STATE_TITLE": "Lokalizacje",
+      "EMPTY_STATE_DESCRIPTION": "Aby rozpocząć, dodaj lokalizację.",
+      "EMPTY_STATE_BUTTON_TITLE": "Dodaj lokalizację",
+      "TITLE": "Lokalizacje"
+    },
+    "DASHBOARD_ADD": {
+      "TITLE": "Dodaj lokalizację",
+      "DESCRIPTION_1": "Lokalizacja to miejsce, do którego podróżowałeś lub do którego zamierzasz się udać. Może to być miasto, kraj, stan lub punkt zainteresowania.",
+      "DESCRIPTION_2": "Po dodaniu lokalizacji możesz dodać konkretne godziny jej odwiedzenia.",
+      "CANCEL_BUTTON": "Anuluj",
+      "SUBMIT_BUTTON": "Dodaj"
+    },
+    "ERROR": {
+      "TITLE": "O nie!",
+      "HOME_BUTTON": "Strona główna"
+    },
+    "INDEX": {
+      "TITLE": "Travel Log",
+      "DESCRIPTION_1": "Śledź swoje podróże i przygody dzięki tej prostej aplikacji do prowadzenia dziennika podróży.",
+      "DESCRIPTION_2": "Dodawaj lokalizacje, zdjęcia i notatki, aby utworzyć cyfrowy dziennik swoich podróży.",
+      "START_LOGGING_BUTTON": "Rozpocznij"
+    },
+    "ADD": {
+      "DRAG_MARKER_1": "Przeciągnij ",
+      "DRAG_MARKER_2": " znacznik w wybrane miejsce",
+      "OR_DOUBLE_CLICK": "(lub kliknij dwukrotnie na mapie)",
+      "CURRENT_LOCATION": "Bieżąca lokalizacja"
+    }
+  }
+}

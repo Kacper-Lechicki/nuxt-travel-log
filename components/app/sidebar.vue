@@ -4,16 +4,17 @@ import { useBreakpoints } from '~/composables/use-breakpoints';
 
 const sidebarStore = useSidebarStore();
 
+const { t } = useI18n();
 const { isMobile, isDesktop } = useBreakpoints();
 
-const topMenuItems = [
-  { href: '/dashboard', icon: 'tabler:map', name: 'Locations' },
-  { href: '/dashboard/add', icon: 'tabler:circle-plus-filled', name: 'Add Location' },
-];
+const topMenuItems = computed(() => [
+  { href: '/dashboard', icon: 'tabler:map', name: t('COMPONENTS.SIDEBAR.LOCATIONS') },
+  { href: '/dashboard/add', icon: 'tabler:circle-plus-filled', name: t('COMPONENTS.SIDEBAR.ADD_LOCATION') },
+]);
 
-const bottomMenuItems = [
-  { href: '/sign-out', icon: 'tabler:logout-2', name: 'Sign Out' },
-];
+const bottomMenuItems = computed(() => [
+  { href: '/sign-out', icon: 'tabler:logout-2', name: t('COMPONENTS.SIDEBAR.SIGN_OUT') },
+]);
 
 const shouldLockScroll = computed(() => {
   return isMobile.value && sidebarStore.isSidebarOpen;

@@ -1,3 +1,6 @@
+<script lang="ts" setup>
+</script>
+
 <template>
   <header class="sticky top-0 left-0 navbar dark:bg-primary text-primary-content z-[1000]">
     <div class="navbar-start">
@@ -7,8 +10,9 @@
       </NuxtLink>
     </div>
 
-    <div class="flex items-center md:gap-2 navbar-end">
+    <div class="flex items-center gap-6 navbar-end">
       <UiThemeToggle />
+      <UiLocaleToggle />
       <AppAuthButton />
     </div>
   </header>

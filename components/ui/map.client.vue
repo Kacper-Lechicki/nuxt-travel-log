@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import type { MglEvent } from '@indoorequal/vue-maplibre-gl';
+import type { LngLat } from 'maplibre-gl';
+
 import { computed, ref } from 'vue';
 
 import { useBreakpoints } from '~/composables/use-breakpoints';
@@ -9,7 +12,15 @@ const mapStore = useMapStore();
 const colorMode = useColorMode();
 
 const { isDesktop } = useBreakpoints();
-const { tooltipStates, handleMouseEnter, handleMouseLeave } = useMapTooltips();
+
+const {
+  tooltipStates,
+  draggableTooltipState,
+  handleMouseEnter,
+  handleMouseLeave,
+  handleDraggableMouseEnter,
+  handleDraggableMouseLeave,
+} = useMapTooltips();
 
 const zoom = 2;
 
@@ -22,12 +33,13 @@ const style = computed(() =>
     : 'https://tiles.openfreemap.org/styles/liberty',
 );
 
-function fitMapToBounds() {
-  const map = mapRef.value?.map;
-  const bounds = mapStore.mapBounds;
+async function fitBounds(bounds: any, options = {}) {
+  await nextTick();
 
-  if (!map || !bounds) {
-    console.warn('Map or bounds not available');
+  const map = mapRef.value?.map;
+
+  if (!map) {
+    console.warn('Map instance not available');
     return;
   }
 
@@ -36,6 +48,7 @@ function fitMapToBounds() {
       padding: 50,
       maxZoom: 10,
       duration: 1000,
+      ...options,
     });
   }
   catch (error) {
@@ -43,8 +56,33 @@ function fitMapToBounds() {
   }
 }
 
+async function flyTo(coordinates: [number, number], options = {}) {
+  await nextTick();
+
+  const map = mapRef.value?.map;
+
+  if (!map) {
+    console.warn('Map instance not available');
+    return;
+  }
+
+  map.flyTo({
+    center: coordinates,
+    speed: 0.8,
+    ...options,
+  });
+}
+
+function getMap() {
+  return mapRef.value?.map;
+}
+
 function openModal(pointId: number) {
+  if (mapStore.addedPoint)
+    return;
+
   const modal = locationModals.value[pointId];
+
   if (modal) {
     modal.showModal();
   }
@@ -64,44 +102,25 @@ function onMouseLeave(point: MapPoint) {
   handleMouseLeave(point);
 }
 
-watch(
-  () => mapStore.mapBounds,
-  async (newBounds) => {
-    if (!newBounds)
-      return;
+function updateAddedPoint(location: LngLat) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = location.lat;
+    mapStore.addedPoint.long = location.lng;
+  }
+}
 
-    await nextTick();
+function onDoubleClick(mglEvent: MglEvent<'dblclick'>) {
+  if (mapStore.addedPoint) {
+    mapStore.addedPoint.lat = mglEvent.event.lngLat.lat;
+    mapStore.addedPoint.long = mglEvent.event.lngLat.lng;
+  }
+}
 
-    const map = mapRef.value?.map;
-
-    if (map) {
-      map.fitBounds(newBounds, {
-        padding: 50,
-        maxZoom: 10,
-      });
-    }
-  },
-  { immediate: true },
-);
-
-watch(
-  () => mapStore.activePoint,
-  async (activePoint) => {
-    const map = mapRef.value?.map;
-
-    if (map) {
-      if (!activePoint)
-        return;
-
-      await nextTick();
-
-      map.flyTo({
-        center: [activePoint.long, activePoint.lat],
-        speed: 0.8,
-      });
-    }
-  },
-);
+defineExpose({
+  fitBounds,
+  flyTo,
+  getMap,
+});
 </script>
 
 <template>
@@ -110,6 +129,7 @@ watch(
     :center="CENTER_USA"
     :map-style="style"
     :zoom="zoom"
+    @map:dblclick="onDoubleClick($event)"
   >
     <MglNavigationControl />
 
@@ -142,11 +162,40 @@ watch(
       />
     </MglMarker>
 
-    <MglCustomControl position="top-left">
+    <MglMarker
+      v-if="mapStore.addedPoint"
+      :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+      draggable
+      @update:coordinates="updateAddedPoint($event)"
+    >
+      <template #marker>
+        <div
+          class="cursor-pointer"
+          @mouseenter="(e) => handleDraggableMouseEnter(e)"
+          @mouseleave="handleDraggableMouseLeave"
+        >
+          <Icon
+            class="text-warning"
+            name="tabler:map-pin-filled"
+            size="35"
+          />
+        </div>
+      </template>
+
+      <UiTooltip
+        v-if="draggableTooltipState.visible && isDesktop"
+        :show="draggableTooltipState.visible"
+        :target-element="draggableTooltipState.element"
+        :text="$t('COMPONENTS.MAP.DRAG_TO_DESIRED_LOCATION')"
+        placement="top"
+      />
+    </MglMarker>
+
+    <MglCustomControl v-if="!mapStore.addedPoint" position="top-left">
       <button
         :disabled="!mapStore.mapPoints.length"
         class="text-black"
-        @click="fitMapToBounds"
+        @click="() => fitBounds(mapStore.mapBounds)"
       >
         <span class="h-full flex justify-center items-center">
           <Icon

@@ -7,6 +7,14 @@
     },
     "NAVBAR": {
       "TRAVEL_LOG": "Travel Log"
+    },
+    "MAP": {
+      "DRAG_TO_DESIRED_LOCATION": "Drag to desired location"
+    },
+    "SIDEBAR": {
+      "LOCATIONS": "Locations",
+      "ADD_LOCATION": "Add Location",
+      "SIGN_OUT": "Sign Out"
     }
   },
   "PAGES": {
@@ -32,6 +40,12 @@
       "DESCRIPTION_1": "Keep track of your travels and adventures with this simple travel log app.",
       "DESCRIPTION_2": "Add locations, photos, and notes to create a digital journal of your journeys.",
       "START_LOGGING_BUTTON": "Start Logging"
+    },
+    "ADD": {
+      "DRAG_MARKER_1": "Drag the ",
+      "DRAG_MARKER_2": " marker to your desired location.",
+      "OR_DOUBLE_CLICK": "(or double-click on the map)",
+      "CURRENT_LOCATION": "Current location"
     }
   }
 }

@@ -2,6 +2,28 @@
 const locationsStore = useLocationsStore();
 
 const { isDesktop } = useBreakpoints();
+
+const mapRef = ref();
+
+const { initializeBounds, enableAllWatchers } = useMapWatchers(mapRef);
+
+const stopWatchers = enableAllWatchers();
+
+onMounted(() => {
+  watch(
+    mapRef,
+    (value) => {
+      if (value) {
+        initializeBounds();
+      }
+    },
+    { immediate: true },
+  );
+});
+
+onBeforeUnmount(() => {
+  stopWatchers();
+});
 </script>
 
 <template>
@@ -41,7 +63,7 @@ const { isDesktop } = useBreakpoints();
         }"
         class="rounded overflow-hidden"
       >
-        <UiMap />
+        <UiMap ref="mapRef" />
       </div>
     </div>
   </div>

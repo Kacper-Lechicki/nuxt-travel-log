@@ -12,6 +12,8 @@ const authStore = useAuthStore();
 
         <p class="py-6">
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_1') }}</span>
+          <br>
+          <br>
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_2') }}</span>
         </p>
 

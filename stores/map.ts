@@ -15,12 +15,14 @@ export type MapPoint = {
 type MapState = {
   mapPoints: MapPoint[];
   activePoint: MapPoint | null;
+  addedPoint: MapPoint | null;
 };
 
 export const useMapStore = defineStore('map', {
   state: (): MapState => ({
     mapPoints: [],
     activePoint: null,
+    addedPoint: null,
   }),
 
   getters: {

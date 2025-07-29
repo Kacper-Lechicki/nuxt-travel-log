@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+const { isDesktop } = useBreakpoints();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -8,7 +10,7 @@
         <Icon name="tabler:map" size="21" />
 
         <h1 class="font-bold">
-          {{ $t('COMPONENTS.NAVBAR.TRAVEL_LOG') }}
+          {{ t('COMPONENTS.NAVBAR.TRAVEL_LOG') }}
         </h1>
       </NuxtLink>
     </div>
@@ -16,7 +18,7 @@
     <div class="flex items-center gap-6 navbar-end">
       <UiThemeToggle />
       <UiLocaleToggle />
-      <AppAuthButton />
+      <AppAuthButton :show-label="isDesktop" />
     </div>
   </header>
 </template>

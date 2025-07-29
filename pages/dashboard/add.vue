@@ -18,6 +18,8 @@ const router = useRouter();
 const mapStore = useMapStore();
 const locationsStore = useLocationsStore();
 
+const { t } = useI18n();
+
 const submitted = ref(false);
 
 onMounted(() => {
@@ -71,7 +73,7 @@ effect(() => {
   <div class="px-6 lg:px-12 py-12 container mx-auto flex flex-col gap-9">
     <div
       v-if="locationsStore.error"
-      class="alert alert-error"
+      class="alert alert-error break-all"
       role="alert"
     >
       <span>{{ locationsStore.error }}</span>
@@ -79,12 +81,12 @@ effect(() => {
 
     <div class="flex flex-col 2xl:flex-row gap-12">
       <div class="flex flex-col gap-9 2xl:max-w-1/2">
-        <UiTitleWithDescription :title="$t('PAGES.DASHBOARD_ADD.TITLE')" has-description>
+        <UiTitleWithDescription :title="t('PAGES.DASHBOARD_ADD.TITLE')" has-description>
           <template #description>
-            <span>{{ $t('PAGES.DASHBOARD_ADD.DESCRIPTION_1') }}</span>
+            <span>{{ t('PAGES.DASHBOARD_ADD.DESCRIPTION_1') }}</span>
             <br>
             <br>
-            <span>{{ $t('PAGES.DASHBOARD_ADD.DESCRIPTION_2') }}</span>
+            <span>{{ t('PAGES.DASHBOARD_ADD.DESCRIPTION_2') }}</span>
           </template>
         </UiTitleWithDescription>
 
@@ -107,20 +109,20 @@ effect(() => {
           />
 
           <p class="mt-3">
-            <span>{{ $t('PAGES.ADD.DRAG_MARKER_1') }}</span>
+            <span>{{ t('PAGES.ADD.DRAG_MARKER_1') }}</span>
 
             <Icon
               class="text-warning"
               name="tabler:map-pin-filled"
             />
 
-            <span>{{ $t('PAGES.ADD.DRAG_MARKER_2') }}</span>
+            <span>{{ t('PAGES.ADD.DRAG_MARKER_2') }}</span>
             <br>
-            <span class="text-xs">{{ $t('PAGES.ADD.OR_DOUBLE_CLICK') }}</span>
+            <span class="text-xs">{{ t('PAGES.ADD.OR_DOUBLE_CLICK') }}</span>
           </p>
 
           <p class="text-xs opacity-55 font-medium">
-            <span>{{ $t('PAGES.ADD.CURRENT_LOCATION') }}</span>: {{ formatNumber(controlledValues.lat || 0) }}, {{ formatNumber(controlledValues.long || 0) }}
+            <span>{{ t('PAGES.ADD.CURRENT_LOCATION') }}</span>: {{ formatNumber(controlledValues.lat || 0) }}, {{ formatNumber(controlledValues.long || 0) }}
           </p>
 
           <div class="mt-3 flex justify-end gap-3">
@@ -131,7 +133,7 @@ effect(() => {
               @click="router.back()"
             >
               <Icon name="tabler:arrow-left" size="21" />
-              <span>{{ $t('PAGES.DASHBOARD_ADD.CANCEL_BUTTON') }}</span>
+              <span>{{ t('PAGES.DASHBOARD_ADD.CANCEL_BUTTON') }}</span>
             </button>
 
             <button
@@ -139,7 +141,7 @@ effect(() => {
               class="btn btn-primary"
               type="submit"
             >
-              <span>{{ $t('PAGES.DASHBOARD_ADD.SUBMIT_BUTTON') }}</span>
+              <span>{{ t('PAGES.DASHBOARD_ADD.SUBMIT_BUTTON') }}</span>
 
               <span
                 v-if="locationsStore.isLoading"

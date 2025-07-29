@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const authStore = useAuthStore();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -7,12 +8,12 @@ const authStore = useAuthStore();
     <div class="hero-content text-center min-h-96">
       <div class="max-w-md">
         <h1 class="text-3xl font-bold">
-          {{ $t('PAGES.INDEX.TITLE') }}
+          {{ t('PAGES.INDEX.TITLE') }}
         </h1>
 
         <p class="py-6">
-          <span>{{ $t('PAGES.INDEX.DESCRIPTION_1') }}</span>
-          <span>{{ $t('PAGES.INDEX.DESCRIPTION_2') }}</span>
+          <span>{{ t('PAGES.INDEX.DESCRIPTION_1') }}</span>
+          <span>{{ t('PAGES.INDEX.DESCRIPTION_2') }}</span>
         </p>
 
         <AppAuthButton v-if="!authStore.user" class="mx-auto" />
@@ -22,7 +23,7 @@ const authStore = useAuthStore();
           class="btn btn-primary mx-auto"
           to="/dashboard"
         >
-          <span>{{ $t('PAGES.INDEX.START_LOGGING_BUTTON') }}</span>
+          <span>{{ t('PAGES.INDEX.START_LOGGING_BUTTON') }}</span>
         </NuxtLink>
       </div>
     </div>

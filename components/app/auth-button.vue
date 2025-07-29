@@ -1,5 +1,18 @@
 <script lang="ts" setup>
+type Props = {
+  showLabel?: boolean;
+};
+
+const props = withDefaults(
+  defineProps<Props>(),
+  {
+    showLabel: true,
+  },
+);
+
 const authStore = useAuthStore();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -22,7 +35,7 @@ const authStore = useAuthStore();
       <li>
         <NuxtLink to="/sign-out">
           <Icon name="tabler:logout-2" size="18" />
-          <span>{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_OUT') }}</span>
+          <span>{{ t('COMPONENTS.AUTH_BUTTON.SIGN_OUT') }}</span>
         </NuxtLink>
       </li>
     </ul>
@@ -34,9 +47,9 @@ const authStore = useAuthStore();
     class="btn btn-accent flex gap-2 max-w-55"
     @click="authStore.signIn"
   >
-    <span class="truncate min-w-0">
-      <span class="md:hidden">{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_IN_SHORT') }}</span>
-      <span class="hidden md:inline">{{ $t('COMPONENTS.AUTH_BUTTON.SIGN_IN_WITH_GITHUB') }}</span>
+    <span v-if="props.showLabel" class="truncate min-w-0">
+      <span class="md:hidden">{{ t('COMPONENTS.AUTH_BUTTON.SIGN_IN_SHORT') }}</span>
+      <span class="hidden md:inline">{{ t('COMPONENTS.AUTH_BUTTON.SIGN_IN_WITH_GITHUB') }}</span>
     </span>
 
     <span v-if="authStore.isLoading" class="loading loading-spinner loading-sm flex-shrink-0" />

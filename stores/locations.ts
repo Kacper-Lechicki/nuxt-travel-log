@@ -1,3 +1,5 @@
+import type { RouteLocationRaw } from '#vue-router';
+
 import { defineStore } from 'pinia';
 
 import type { InsertLocation, Location } from '~/lib/db/schema';
@@ -6,7 +8,8 @@ type SidebarItem = {
   id: string;
   name: string;
   icon: string;
-  href: string;
+  href?: string;
+  to?: RouteLocationRaw;
   location?: MapPoint;
 };
 
@@ -43,7 +46,7 @@ export const useLocationsStore = defineStore('locations', {
         id: `location-${location.id}`,
         name: location.name,
         icon: 'tabler:map-pin-filled',
-        href: '#',
+        to: { name: 'dashboard-location-slug', params: { slug: location.slug } },
         location,
       }));
     },

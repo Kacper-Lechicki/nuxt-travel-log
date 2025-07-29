@@ -8,6 +8,7 @@ const mapStore = useMapStore();
 const colorMode = useColorMode();
 
 const { isDesktop } = useBreakpoints();
+const { t } = useI18n();
 
 const {
   tooltipStates,
@@ -166,6 +167,7 @@ defineExpose({
       <MglMarker
         v-if="mapStore.addedPoint"
         :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+        class-name="z-50"
         draggable
         @update:coordinates="updateAddedPoint($event)"
       >
@@ -187,7 +189,7 @@ defineExpose({
           v-if="draggableTooltipState.visible && isDesktop"
           :show="draggableTooltipState.visible"
           :target-element="draggableTooltipState.element"
-          :text="$t('COMPONENTS.MAP.DRAG_TO_DESIRED_LOCATION')"
+          :text="t('COMPONENTS.MAP.DRAG_TO_DESIRED_LOCATION')"
           placement="top"
         />
       </MglMarker>
@@ -227,9 +229,9 @@ defineExpose({
           </h3>
         </div>
 
-        <div v-if="point.description" class="mt-3 whitespace-pre-wrap break-all overflow-y-auto">
+        <div class="mt-3 whitespace-pre-wrap break-all overflow-y-auto">
           <p>
-            {{ point.description }}
+            {{ point.description || t('COMPONENTS.MAP.EMPTY_DESCRIPTION') }}
           </p>
         </div>
       </div>

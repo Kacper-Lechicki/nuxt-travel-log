@@ -10,3 +10,15 @@ body {
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 0.03rem;
 }
+
+:where(
+  :root:has(
+    .modal-open,
+    .modal[open],
+    .modal:target,
+    .modal-toggle:checked,
+    .drawer:not(.drawer-open) > .drawer-toggle:checked
+  )
+) {
+  scrollbar-gutter: unset !important;
+}

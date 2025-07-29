@@ -2,10 +2,6 @@
 import type { MglEvent } from '@indoorequal/vue-maplibre-gl';
 import type { LngLat } from 'maplibre-gl';
 
-import { computed, ref } from 'vue';
-
-import { useBreakpoints } from '~/composables/use-breakpoints';
-import { useMapTooltips } from '~/composables/use-map-tooltips';
 import { CENTER_USA } from '~/lib/constants';
 
 const mapStore = useMapStore();
@@ -33,13 +29,22 @@ const style = computed(() =>
     : 'https://tiles.openfreemap.org/styles/liberty',
 );
 
+function forceMapResize() {
+  const map = mapRef.value?.map;
+
+  if (map) {
+    requestAnimationFrame(() => {
+      map.resize();
+    });
+  }
+}
+
 async function fitBounds(bounds: any, options = {}) {
   await nextTick();
 
   const map = mapRef.value?.map;
 
   if (!map) {
-    console.warn('Map instance not available');
     return;
   }
 
@@ -54,23 +59,6 @@ async function fitBounds(bounds: any, options = {}) {
   catch (error) {
     console.error('Error fitting bounds:', error);
   }
-}
-
-async function flyTo(coordinates: [number, number], options = {}) {
-  await nextTick();
-
-  const map = mapRef.value?.map;
-
-  if (!map) {
-    console.warn('Map instance not available');
-    return;
-  }
-
-  map.flyTo({
-    center: coordinates,
-    speed: 0.8,
-    ...options,
-  });
 }
 
 function getMap() {
@@ -116,115 +104,135 @@ function onDoubleClick(mglEvent: MglEvent<'dblclick'>) {
   }
 }
 
+function onMapLoad() {
+  forceMapResize();
+
+  const mapContainer = mapRef.value?.$el;
+
+  if (mapContainer) {
+    forceMapResize();
+  }
+}
+
 defineExpose({
   fitBounds,
-  flyTo,
   getMap,
 });
 </script>
 
 <template>
-  <MglMap
-    ref="mapRef"
-    :center="CENTER_USA"
-    :map-style="style"
-    :zoom="zoom"
-    @map:dblclick="onDoubleClick($event)"
-  >
-    <MglNavigationControl />
-
-    <MglMarker
-      v-for="point in mapStore.mapPoints"
-      :key="point.id"
-      :coordinates="[point.long, point.lat]"
+  <div class="w-full h-full inset-0">
+    <MglMap
+      ref="mapRef"
+      :center="CENTER_USA"
+      :double-click-zoom="false"
+      :map-style="style"
+      :render-world-copies="false"
+      :zoom="zoom"
+      @map:load="onMapLoad"
+      @map:dblclick="onDoubleClick($event)"
     >
-      <template #marker>
-        <div
-          class="cursor-pointer"
-          @click="openModal(point.id)"
-          @mouseenter="(e) => onMouseEnter(point, e)"
-          @mouseleave="() => onMouseLeave(point)"
-        >
-          <Icon
-            :class="mapStore.activePoint === point ? 'text-accent' : 'text-secondary'"
-            name="tabler:map-pin-filled"
-            size="28"
-          />
-        </div>
-      </template>
+      <MglNavigationControl />
 
-      <UiTooltip
-        v-if="tooltipStates[point.id] && isDesktop"
-        :show="tooltipStates[point.id].visible"
-        :target-element="tooltipStates[point.id].element"
-        :text="point.name"
-        placement="top"
-      />
-    </MglMarker>
-
-    <MglMarker
-      v-if="mapStore.addedPoint"
-      :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
-      draggable
-      @update:coordinates="updateAddedPoint($event)"
-    >
-      <template #marker>
-        <div
-          class="cursor-pointer"
-          @mouseenter="(e) => handleDraggableMouseEnter(e)"
-          @mouseleave="handleDraggableMouseLeave"
-        >
-          <Icon
-            class="text-warning"
-            name="tabler:map-pin-filled"
-            size="35"
-          />
-        </div>
-      </template>
-
-      <UiTooltip
-        v-if="draggableTooltipState.visible && isDesktop"
-        :show="draggableTooltipState.visible"
-        :target-element="draggableTooltipState.element"
-        :text="$t('COMPONENTS.MAP.DRAG_TO_DESIRED_LOCATION')"
-        placement="top"
-      />
-    </MglMarker>
-
-    <MglCustomControl v-if="!mapStore.addedPoint" position="top-left">
-      <button
-        :disabled="!mapStore.mapPoints.length"
-        class="text-black"
-        @click="() => fitBounds(mapStore.mapBounds)"
+      <MglMarker
+        v-for="point in mapStore.mapPoints"
+        :key="point.id"
+        :coordinates="[point.long, point.lat]"
       >
-        <span class="h-full flex justify-center items-center">
-          <Icon
-            name="tabler:focus-2"
-            size="21"
-          />
-        </span>
-      </button>
-    </MglCustomControl>
-  </MglMap>
+        <template #marker>
+          <div
+            class="cursor-pointer"
+            @click="openModal(point.id)"
+            @mouseenter="(e) => onMouseEnter(point, e)"
+            @mouseleave="() => onMouseLeave(point)"
+          >
+            <Icon
+              :class="mapStore.activePoint === point ? 'text-accent' : 'text-secondary'"
+              name="tabler:map-pin-filled"
+              size="28"
+            />
+          </div>
+        </template>
 
-  <dialog
-    v-for="point in mapStore.mapPoints"
-    :key="`modal-${point.id}`"
-    :ref="(el) => setModalRef(point.id, el as HTMLDialogElement)"
-    class="modal"
-  >
-    <div class="modal-box">
-      <h3 class="text-lg font-bold">
-        {{ point.name }}
-      </h3>
+        <UiTooltip
+          v-if="tooltipStates[point.id] && isDesktop"
+          :show="tooltipStates[point.id].visible"
+          :target-element="tooltipStates[point.id].element"
+          :text="point.name"
+          placement="top"
+        />
+      </MglMarker>
 
-      <div v-if="point.description" class="mt-3">
-        <p>{{ point.description }}</p>
+      <MglMarker
+        v-if="mapStore.addedPoint"
+        :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+        draggable
+        @update:coordinates="updateAddedPoint($event)"
+      >
+        <template #marker>
+          <div
+            class="cursor-pointer"
+            @mouseenter="(e) => handleDraggableMouseEnter(e)"
+            @mouseleave="handleDraggableMouseLeave"
+          >
+            <Icon
+              class="text-warning"
+              name="tabler:map-pin-filled"
+              size="35"
+            />
+          </div>
+        </template>
+
+        <UiTooltip
+          v-if="draggableTooltipState.visible && isDesktop"
+          :show="draggableTooltipState.visible"
+          :target-element="draggableTooltipState.element"
+          :text="$t('COMPONENTS.MAP.DRAG_TO_DESIRED_LOCATION')"
+          placement="top"
+        />
+      </MglMarker>
+
+      <MglCustomControl v-if="!mapStore.addedPoint" position="top-left">
+        <button
+          :disabled="!mapStore.mapPoints.length"
+          class="text-black"
+          @click="() => fitBounds(mapStore.mapBounds)"
+        >
+          <span class="h-full flex justify-center items-center">
+            <Icon
+              name="tabler:focus-2"
+              size="21"
+            />
+          </span>
+        </button>
+      </MglCustomControl>
+    </MglMap>
+
+    <dialog
+      v-for="point in mapStore.mapPoints"
+      :key="`modal-${point.id}`"
+      :ref="(el) => setModalRef(point.id, el as HTMLDialogElement)"
+      class="modal"
+    >
+      <div class="modal-box flex flex-col max-h-[250px]">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            ✕
+          </button>
+        </form>
+
+        <div class="max-w-[275px]">
+          <h3 class="text-lg font-bold truncate">
+            {{ point.name }}
+          </h3>
+        </div>
+
+        <div v-if="point.description" class="mt-3 whitespace-pre-wrap break-all overflow-y-auto">
+          <p>
+            {{ point.description }}
+          </p>
+        </div>
       </div>
-    </div>
-
-    <form class="modal-backdrop" method="dialog">
-      <button>close</button>
-    </form>
-  </dialog>
+    </dialog>
+  </div>
 </template>

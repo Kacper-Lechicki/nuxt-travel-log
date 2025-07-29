@@ -68,7 +68,7 @@ effect(() => {
 </script>
 
 <template>
-  <div class="container mx-auto flex flex-col gap-9">
+  <div class="px-6 lg:px-12 py-12 container mx-auto flex flex-col gap-9">
     <div
       v-if="locationsStore.error"
       class="alert alert-error"
@@ -115,9 +115,7 @@ effect(() => {
             />
 
             <span>{{ $t('PAGES.ADD.DRAG_MARKER_2') }}</span>
-
             <br>
-
             <span class="text-xs">{{ $t('PAGES.ADD.OR_DOUBLE_CLICK') }}</span>
           </p>
 
@@ -159,7 +157,7 @@ effect(() => {
       </div>
 
       <div
-        class="rounded overflow-hidden min-h-[575px] md:min-w-[575px] flex-1/2"
+        class="rounded overflow-hidden mx-auto min-h-[250px] min-w-[100%] sm:min-h-[500px] md:min-h-[575px] 2xl:min-w-[575px] flex-1/2"
       >
         <UiMap />
       </div>

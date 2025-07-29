@@ -27,44 +27,47 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div>
-    <div v-if="locationsStore.isLoading" class="flex justify-center py-12">
-      <span class="loading loading-spinner loading-xl" />
-    </div>
+  <div
+    v-if="locationsStore.isLoading"
+    :class="{
+      'h-[calc(100vh-56px)]': isDesktop,
+      'h-[calc(100vh-112px)]': !isDesktop,
+    }"
+    class="flex justify-center items-center px-6 lg:px-12 py-12 container"
+  >
+    <span class="loading loading-spinner loading-xl" />
+  </div>
 
-    <UiTitleWithDescription
-      v-else-if="locationsStore.isEmpty"
-      :title="$t('PAGES.DASHBOARD.EMPTY_STATE_TITLE')"
-      has-additional
-      has-description
-    >
-      <template #description>
-        <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_DESCRIPTION') }}</span>
-      </template>
+  <UiTitleWithDescription
+    v-else-if="locationsStore.isEmpty"
+    :title="$t('PAGES.DASHBOARD.EMPTY_STATE_TITLE')"
+    class="px-6 lg:px-12 py-12 container"
+    has-additional
+    has-description
+  >
+    <template #description>
+      <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_DESCRIPTION') }}</span>
+    </template>
 
-      <template #additional>
-        <NuxtLink
-          class="btn btn-primary mt-3"
-          to="/dashboard/add"
-        >
-          <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_BUTTON_TITLE') }}</span>
-          <Icon name="tabler:circle-plus-filled" size="21" />
-        </NuxtLink>
-      </template>
-    </UiTitleWithDescription>
-
-    <div v-else-if="locationsStore.hasLocations" class="flex flex-col gap-9 h-full">
-      <UiTitleWithDescription :title="$t('PAGES.DASHBOARD.TITLE')" />
-
-      <div
-        :class="{
-          'h-[calc(100vh-56px-84px-32px-2.25rem)]': isDesktop,
-          'h-[calc(100vh-112px-84px-32px-2.25rem)]': !isDesktop,
-        }"
-        class="rounded overflow-hidden"
+    <template #additional>
+      <NuxtLink
+        class="btn btn-primary mt-3"
+        to="/dashboard/add"
       >
-        <UiMap ref="mapRef" />
-      </div>
-    </div>
+        <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_BUTTON_TITLE') }}</span>
+        <Icon name="tabler:circle-plus-filled" size="21" />
+      </NuxtLink>
+    </template>
+  </UiTitleWithDescription>
+
+  <div
+    v-else-if="locationsStore.hasLocations"
+    :class="{
+      'h-[calc(100vh-56px)]': isDesktop,
+      'h-[calc(100vh-112px)]': !isDesktop,
+    }"
+    class="w-full"
+  >
+    <UiMap ref="mapRef" />
   </div>
 </template>

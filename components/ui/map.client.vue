@@ -50,7 +50,7 @@ async function fitBounds(bounds: any, options = {}) {
 
   try {
     map.fitBounds(bounds, {
-      padding: 50,
+      padding: 100,
       maxZoom: 10,
       duration: 1000,
       ...options,

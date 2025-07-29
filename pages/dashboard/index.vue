@@ -63,8 +63,8 @@ onBeforeUnmount(() => {
   <div
     v-else-if="locationsStore.hasLocations"
     :class="{
-      'h-[calc(100vh-56px)]': isDesktop,
-      'h-[calc(100vh-112px)]': !isDesktop,
+      'h-[calc(100vh-76px)]': isDesktop,
+      'h-[calc(100vh-132px)]': !isDesktop,
     }"
     class="w-full"
   >

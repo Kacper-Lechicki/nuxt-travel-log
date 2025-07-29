@@ -6,14 +6,12 @@ const authStore = useAuthStore();
   <div class="hero bg-base-300 container mx-auto md:mt-6 rounded">
     <div class="hero-content text-center min-h-96">
       <div class="max-w-md">
-        <h1 class="text-5xl font-bold">
+        <h1 class="text-3xl font-bold">
           {{ $t('PAGES.INDEX.TITLE') }}
         </h1>
 
         <p class="py-6">
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_1') }}</span>
-          <br>
-          <br>
           <span>{{ $t('PAGES.INDEX.DESCRIPTION_2') }}</span>
         </p>
 

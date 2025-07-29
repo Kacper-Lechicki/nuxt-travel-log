@@ -38,6 +38,7 @@ const mapStore = useMapStore();
         :icon="item.icon"
         :name="item.name"
         :only-icon="!props.isOpen && !props.mobileMode"
+        :to="item.to"
         @click="emits('itemClick')"
         @mouseenter="mapStore.activePoint = (item.location || null)"
         @mouseleave="mapStore.activePoint = null"

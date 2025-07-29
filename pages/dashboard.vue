@@ -27,5 +27,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<!-- class="flex gap-12 flex-1 px-6 lg:px-12 py-12 container mx-auto min-w-0 top-[56px] overflow-y-auto" -->

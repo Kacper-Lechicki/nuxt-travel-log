@@ -5,6 +5,7 @@ const { isDesktop } = useBreakpoints();
 
 const mapRef = ref();
 
+const { t } = useI18n();
 const { initializeBounds, enableAllWatchers } = useMapWatchers(mapRef);
 
 const stopWatchers = enableAllWatchers();
@@ -40,13 +41,13 @@ onBeforeUnmount(() => {
 
   <UiTitleWithDescription
     v-else-if="locationsStore.isEmpty"
-    :title="$t('PAGES.DASHBOARD.EMPTY_STATE_TITLE')"
+    :title="t('PAGES.DASHBOARD.EMPTY_STATE_TITLE')"
     class="px-6 lg:px-12 py-12 container"
     has-additional
     has-description
   >
     <template #description>
-      <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_DESCRIPTION') }}</span>
+      <span>{{ t('PAGES.DASHBOARD.EMPTY_STATE_DESCRIPTION') }}</span>
     </template>
 
     <template #additional>
@@ -54,7 +55,7 @@ onBeforeUnmount(() => {
         class="btn btn-primary mt-3"
         to="/dashboard/add"
       >
-        <span>{{ $t('PAGES.DASHBOARD.EMPTY_STATE_BUTTON_TITLE') }}</span>
+        <span>{{ t('PAGES.DASHBOARD.EMPTY_STATE_BUTTON_TITLE') }}</span>
         <Icon name="tabler:circle-plus-filled" size="21" />
       </NuxtLink>
     </template>

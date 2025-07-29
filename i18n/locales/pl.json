@@ -9,7 +9,8 @@
       "TRAVEL_LOG": "Travel Log"
     },
     "MAP": {
-      "DRAG_TO_DESIRED_LOCATION": "Przeciągnij do żądanej lokalizacji"
+      "DRAG_TO_DESIRED_LOCATION": "Przeciągnij do żądanej lokalizacji",
+      "EMPTY_DESCRIPTION": "Brak opisu."
     },
     "SIDEBAR": {
       "LOCATIONS": "Lokalizacje",
@@ -46,6 +47,9 @@
       "DRAG_MARKER_2": " znacznik w wybrane miejsce",
       "OR_DOUBLE_CLICK": "(lub kliknij dwukrotnie na mapie)",
       "CURRENT_LOCATION": "Bieżąca lokalizacja"
+    },
+    "LOCATION_PAGE": {
+      "EMPTY_DESCRIPTION": "Brak opisu."
     }
   }
 }

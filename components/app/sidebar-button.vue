@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+import type { RouteLocationRaw } from '#vue-router';
+
 import { computed, ref } from 'vue';
 
 type Props = {
   name: string;
   icon: string;
-  href: string;
+  href?: string;
+  to?: RouteLocationRaw;
   onlyIcon?: boolean;
   accent?: boolean;
 };
@@ -70,7 +73,7 @@ function handleMouseLeave() {
   >
     <NuxtLink
       :class="linkClasses"
-      :to="props.href"
+      :to="props.href || props.to"
       class="flex flex-nowrap justify-start font-medium gap-3 p-2 border border-gray-700/30 rounded h-11 hover:cursor-pointer overflow-hidden transition-colors duration-200"
       @click="handleClick"
     >

@@ -26,26 +26,11 @@ export function useMapWatchers(mapRef: Ref) {
     );
   };
 
-  const watchActivePoint = () => {
-    return watch(
-      () => mapStore.activePoint,
-      async (activePoint) => {
-        if (!mapRef.value || mapStore.addedPoint || !activePoint) {
-          return;
-        }
-
-        await mapRef.value.flyTo([activePoint.long, activePoint.lat]);
-      },
-    );
-  };
-
   const enableAllWatchers = () => {
     const stopBoundsWatcher = watchMapBounds();
-    const stopActivePointWatcher = watchActivePoint();
 
     return () => {
       stopBoundsWatcher();
-      stopActivePointWatcher();
     };
   };
 
@@ -56,7 +41,6 @@ export function useMapWatchers(mapRef: Ref) {
   return {
     updateMapBounds,
     watchMapBounds,
-    watchActivePoint,
     enableAllWatchers,
     initializeBounds,
   };

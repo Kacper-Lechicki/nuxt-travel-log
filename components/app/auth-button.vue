@@ -5,7 +5,7 @@ const authStore = useAuthStore();
 <template>
   <div v-if="!authStore.isLoading && authStore.user" class="dropdown dropdown-end">
     <div
-      class="btn flex gap-3 max-w-55"
+      class="sm:btn flex gap-3 max-w-55"
       role="button"
       tabindex="0"
     >
